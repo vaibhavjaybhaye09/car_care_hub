@@ -1,0 +1,316 @@
+================================================================================
+                    CAR SERVICE BOOKING SYSTEM
+                    Template Files Information
+================================================================================
+
+BASE TEMPLATE
+-------------
+Location: templates/base.html
+Purpose: Main base template that all other templates extend
+Features:
+- Bootstrap 5.3.0 CSS and JavaScript
+- Bootstrap Icons
+- Navigation bar with role-based menu
+- Message display system
+- Footer
+- Responsive design
+
+ACCOUNTS APP TEMPLATES
+----------------------
+Location: accounts/templates/accounts/
+
+1. home.html
+   - Home page template
+   - Welcome page with login/signup links
+
+2. login.html
+   - User login form
+   - Username and password fields
+   - Password show/hide toggle
+   - Links to signup and forgot password
+
+3. signup.html
+   - User registration form
+   - Role selection (Customer/Garage)
+   - Password show/hide toggle
+   - Form validation display
+
+4. verify_otp.html ⭐ (OTP Verification Template)
+   - OTP code input form
+   - 6-digit code entry field
+   - Resend OTP link
+   - Back to login link
+   - Bootstrap styled card layout
+   - Message display for success/error
+
+5. select_role.html
+   - Role selection page
+   - For users who need to select their role
+
+6. change_password.html
+   - Password change form
+   - For authenticated users
+
+7. forgot_password_request.html
+   - Forgot password request form
+   - Username/email input
+
+8. forgot_password_verify.html
+   - OTP verification for password reset
+   - Similar to verify_otp.html
+
+9. forgot_password_reset.html
+   - New password entry form
+   - After OTP verification
+
+10. forbidden.html
+    - 403 Forbidden page
+    - For unauthorized access attempts
+
+CUSTOMERS APP TEMPLATES
+-----------------------
+Location: customers/templates/customers/
+
+1. customer_dashboard.html
+   - Customer dashboard
+   - Vehicle list
+   - Quick actions
+
+2. vehicle_form.html
+   - Add/Edit vehicle form
+   - Vehicle details input
+   - Vehicle type, brand, model, etc.
+
+3. vehicle_confirm_delete.html
+   - Vehicle deletion confirmation
+   - Confirmation dialog
+
+4. search_garage.html
+   - Garage search interface
+   - Search by location/city
+   - Garage listing with services
+
+5. booking_history.html
+   - Customer booking history
+   - List of all bookings
+   - Booking status display
+
+GARAGE APP TEMPLATES
+--------------------
+Location: garage/templates/garage/
+
+1. garage_dashboard.html
+   - Garage owner dashboard
+   - Service list
+   - Quick stats
+
+2. garage_profile.html
+   - Garage profile form
+   - Create/Edit garage information
+   - Name, address, city, etc.
+
+3. add_service.html
+   - Add new service form
+   - Service type, price, duration
+
+4. garage_services.html
+   - List of garage services
+   - Service management interface
+
+BOOKINGS APP TEMPLATES
+----------------------
+Location: bookings/templates/bookings/
+
+1. booking_form.html
+   - Create new booking form
+   - Select garage, vehicle, service
+   - Appointment date selection
+
+2. booking_list.html
+   - List of all bookings
+   - Booking status
+   - Filter options
+
+3. booking_detail.html
+   - Booking details page
+   - Full booking information
+   - Status updates
+
+TEMPLATE STRUCTURE
+-------------------
+All templates follow this structure:
+
+1. Extend base.html:
+   {% extends 'base.html' %}
+
+2. Define content block:
+   {% block content %}
+   ... template content ...
+   {% endblock %}
+
+3. Optional blocks:
+   {% block title %}Page Title{% endblock %}
+   {% block extra_css %}{% endblock %}
+   {% block extra_js %}{% endblock %}
+
+TEMPLATE FEATURES
+-----------------
+- Bootstrap 5.3.0 for styling
+- Bootstrap Icons for icons
+- Responsive design
+- Form validation
+- Message display system
+- CSRF protection
+- Role-based navigation
+
+OTP VERIFICATION TEMPLATE DETAILS
+----------------------------------
+File: accounts/templates/accounts/verify_otp.html
+
+Key Features:
+- Centered card layout
+- 6-digit OTP input field
+- Pattern validation ([0-9]{6})
+- Max length: 6 characters
+- Autofocus on input
+- Resend OTP link
+- Back to login link
+- Success/error message display
+- Bootstrap styling
+
+Template Code Structure:
+- Extends base.html
+- Uses Bootstrap card component
+- Form with POST method
+- CSRF token included
+- Input validation attributes
+- Responsive design (col-md-6 col-lg-5)
+
+TEMPLATE LOCATIONS
+-----------------
+Base Template:
+  templates/base.html
+
+Account Templates:
+  accounts/templates/accounts/*.html
+
+Customer Templates:
+  customers/templates/customers/*.html
+
+Garage Templates:
+  garage/templates/garage/*.html
+
+Booking Templates:
+  bookings/templates/bookings/*.html
+
+TEMPLATE CONFIGURATION
+----------------------
+Settings in car_service_system/settings.py:
+
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [BASE_DIR / 'templates'],  # Base templates directory
+        'APP_DIRS': True,  # Enable app template directories
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
+]
+
+TEMPLATE NAMING CONVENTION
+---------------------------
+- All templates use .html extension
+- Templates are organized by app
+- App templates in: app_name/templates/app_name/
+- Base templates in: templates/
+
+TEMPLATE VARIABLES
+------------------
+Common variables available in templates:
+- user: Current authenticated user
+- messages: Django messages framework
+- form: Form object (in form templates)
+- request: HTTP request object
+
+OTP TEMPLATE SPECIFIC VARIABLES
+-------------------------------
+In verify_otp.html:
+- username: Username for verification
+- messages: Success/error messages
+- form: OTP input form (if using form)
+
+TEMPLATE TAGS USED
+------------------
+- {% extends %}: Template inheritance
+- {% block %}: Define block content
+- {% url %}: Generate URLs
+- {% csrf_token %}: CSRF protection
+- {% if %}: Conditional statements
+- {% for %}: Loop statements
+- {{ variable }}: Display variables
+
+STATIC FILES IN TEMPLATES
+--------------------------
+- Bootstrap CSS: CDN link in base.html
+- Bootstrap JS: CDN link in base.html
+- Bootstrap Icons: CDN link in base.html
+- Custom CSS: Inline styles in base.html
+
+TEMPLATE CUSTOMIZATION
+----------------------
+To customize templates:
+
+1. Base Template:
+   - Edit: templates/base.html
+   - Changes affect all pages
+
+2. App Templates:
+   - Edit: app_name/templates/app_name/template_name.html
+   - Changes affect specific pages
+
+3. Add Custom CSS:
+   - Use {% block extra_css %} in child templates
+   - Or add to base.html <style> tag
+
+4. Add Custom JavaScript:
+   - Use {% block extra_js %} in child templates
+   - Or add to base.html before </body>
+
+TEMPLATE BEST PRACTICES
+-----------------------
+1. Always extend base.html
+2. Use Bootstrap classes for styling
+3. Include CSRF token in forms
+4. Display messages to users
+5. Validate forms on frontend and backend
+6. Use semantic HTML
+7. Make templates responsive
+8. Test on different screen sizes
+
+TROUBLESHOOTING TEMPLATES
+-------------------------
+Issue: Template not found
+Solution: Check TEMPLATES['DIRS'] in settings.py
+
+Issue: Base template not found
+Solution: Ensure base.html is in templates/ directory
+
+Issue: Template variables not displaying
+Solution: Check view context and template variable names
+
+Issue: Static files not loading
+Solution: Run: python manage.py collectstatic
+
+Issue: Forms not working
+Solution: Ensure {% csrf_token %} is included in form
+
+================================================================================
+                            END OF DOCUMENT
+================================================================================
+

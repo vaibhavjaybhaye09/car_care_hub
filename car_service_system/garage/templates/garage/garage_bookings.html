@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block title %}Garage Bookings{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2 class="mb-3">Customer Bookings</h2>
+
+  {% if bookings %}
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Customer</th>
+        <th>Service</th>
+        <th>Vehicle</th>
+        <th>Appointment Date</th>
+        <th>Status</th>
+        <th>Update</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for b in bookings %}
+      <tr>
+        <td>{{ b.customer.username }}</td>
+        <td>{{ b.service.name }}</td>
+        <td>{{ b.vehicle.brand }} {{ b.vehicle.model }}</td>
+        <td>{{ b.appointment_date }}</td>
+        <td>{{ b.status }}</td>
+        <td>
+          <form method="POST" action="{% url 'update_booking_status' b.id %}">
+            {% csrf_token %}
+            <select name="status" class="form-select form-select-sm">
+              <option value="Booked" {% if b.status == 'Booked' %}selected{% endif %}>Booked</option>
+              <option value="In Progress" {% if b.status == 'In Progress' %}selected{% endif %}>In Progress</option>
+              <option value="Ready" {% if b.status == 'Ready' %}selected{% endif %}>Ready</option>
+            </select>
+            <button type="submit" class="btn btn-sm btn-primary mt-1">Update</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p>No bookings available yet.</p>
+  {% endif %}
+</div>
+{% endblock %}

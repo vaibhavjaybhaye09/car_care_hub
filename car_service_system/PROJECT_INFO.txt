@@ -1,0 +1,387 @@
+================================================================================
+                    CAR SERVICE BOOKING SYSTEM
+                    Project Information Document
+================================================================================
+
+PROJECT OVERVIEW
+----------------
+This is a Django-based web application for managing car service bookings. 
+The system allows customers to search for garages, book services for their 
+vehicles, and manage their bookings. Garage owners can create profiles, 
+manage their services, and handle customer bookings.
+
+TECHNOLOGY STACK
+----------------
+- Framework: Django 5.2.8
+- Language: Python 3.11+
+- Database: SQLite3 (Development)
+- Frontend: HTML5, CSS3, Bootstrap 5.3.0
+- Icons: Bootstrap Icons 1.10.0
+- Email: SMTP (Gmail)
+
+PROJECT STRUCTURE
+-----------------
+car_service_system/
+├── accounts/              # User authentication and management
+│   ├── models.py         # UserProfile model (Custom User)
+│   ├── views.py           # Authentication views
+│   ├── forms.py           # User forms
+│   ├── utils.py           # OTP generation and email utilities
+│   ├── urls.py            # Account URLs
+│   └── templates/         # Account templates
+│
+├── customers/             # Customer-specific functionality
+│   ├── models.py         # Vehicle model
+│   ├── views.py           # Customer dashboard, vehicle management
+│   ├── forms.py           # Vehicle forms
+│   ├── urls.py            # Customer URLs
+│   └── templates/         # Customer templates
+│
+├── garage/                # Garage owner functionality
+│   ├── models.py         # Garage, ServiceType, GarageService models
+│   ├── views.py           # Garage dashboard, service management
+│   ├── forms.py           # Garage forms
+│   ├── urls.py            # Garage URLs
+│   └── templates/         # Garage templates
+│
+├── bookings/              # Booking management
+│   ├── models.py         # Booking model
+│   ├── views.py           # Booking views
+│   ├── forms.py           # Booking forms
+│   ├── urls.py            # Booking URLs
+│   └── templates/         # Booking templates
+│
+├── car_service_system/    # Main project configuration
+│   ├── settings.py        # Django settings
+│   ├── urls.py            # Root URL configuration
+│   ├── wsgi.py            # WSGI configuration
+│   └── asgi.py            # ASGI configuration
+│
+├── templates/             # Base templates
+│   └── base.html          # Base template with navigation
+│
+├── static/                # Static files directory
+├── staticfiles/           # Collected static files
+├── db.sqlite3             # SQLite database
+└── manage.py              # Django management script
+
+MAIN FEATURES
+-------------
+
+1. USER AUTHENTICATION
+   - User registration with role selection (Customer/Garage)
+   - Email verification via OTP (6-digit code)
+   - Login/Logout functionality
+   - Password change
+   - Forgot password with OTP verification
+   - Session management
+
+2. CUSTOMER FEATURES
+   - Customer dashboard
+   - Vehicle management (Add, Edit, Delete vehicles)
+   - Search garages by location
+   - View garage services and pricing
+   - Book services for vehicles
+   - View booking history
+   - Track booking status
+
+3. GARAGE FEATURES
+   - Garage profile creation and management
+   - Service management (Add, Delete services)
+   - Service pricing and duration configuration
+   - View customer bookings
+   - Update booking status
+   - Garage dashboard
+
+4. BOOKING SYSTEM
+   - Create bookings for specific services
+   - Select vehicle and appointment date
+   - Booking status tracking (Pending, In Service, Ready, Completed, Cancelled)
+   - Booking history for customers
+   - Booking management for garages
+
+DATABASE MODELS
+---------------
+
+1. UserProfile (accounts/models.py)
+   - Extends Django's AbstractUser
+   - Fields: username, email, password, role, phone, address
+   - Email verification: is_email_verified, otp_code, otp_expires_at
+   - Roles: Customer, Garage
+
+2. Vehicle (customers/models.py)
+   - Fields: customer, vehicle_type, brand, model, year_of_manufacture
+   - Fields: fuel_type, registration_number, created_at
+   - Vehicle types: Two Wheeler, Four Wheeler
+   - Fuel types: Petrol, Diesel, Electric, Hybrid, CNG
+
+3. Garage (garage/models.py)
+   - Fields: user, name, phone, address, city, state, pincode
+   - Fields: description, rating, approved
+   - One-to-one relationship with UserProfile
+
+4. ServiceType (garage/models.py)
+   - Fields: name (unique)
+   - Predefined service types (Oil Change, Brake Repair, etc.)
+
+5. GarageService (garage/models.py)
+   - Fields: garage, service_type, price, duration_minutes, custom_text
+   - Links garages to their available services
+
+6. Booking (bookings/models.py)
+   - Fields: customer, garage, vehicle, service, appointment_date
+   - Fields: status, remarks, booked_on
+   - Status: Pending, In Service, Ready, Completed, Cancelled
+
+URL ROUTES
+----------
+
+Root URLs (/):
+- /                    - Home page
+- /login/              - User login
+- /signup/             - User registration
+- /verify-otp/         - OTP verification
+- /resend-otp/         - Resend OTP code
+- /forgot-password/    - Forgot password request
+- /password/change/    - Change password
+- /logout/             - User logout
+
+Customer URLs (/customers/):
+- /customers/dashboard/           - Customer dashboard
+- /customers/vehicle/add/         - Add vehicle
+- /customers/vehicle/edit/<id>/   - Edit vehicle
+- /customers/vehicle/delete/<id>/ - Delete vehicle
+- /customers/search/              - Search garages
+- /customers/bookings/            - Booking history
+
+Garage URLs (/garage/):
+- /garage/dashboard/        - Garage dashboard
+- /garage/profile/         - Garage profile management
+- /garage/add-service/     - Add service
+- /garage/delete-service/<id>/ - Delete service
+
+Booking URLs (/bookings/):
+- /bookings/book/              - Create booking
+- /bookings/book/<garage_id>/   - Create booking for specific garage
+- /bookings/list/               - List bookings
+- /bookings/detail/<id>/        - Booking details
+
+Admin URLs:
+- /admin/                  - Django admin panel
+
+EMAIL CONFIGURATION
+-------------------
+The system uses Gmail SMTP for sending OTP verification emails.
+
+Email Settings (in settings.py):
+- EMAIL_BACKEND: django.core.mail.backends.smtp.EmailBackend
+- EMAIL_HOST: smtp.gmail.com
+- EMAIL_PORT: 587
+- EMAIL_USE_TLS: True
+- EMAIL_HOST_USER: Your Gmail address
+- EMAIL_HOST_PASSWORD: Gmail app password
+- DEFAULT_FROM_EMAIL: Your Gmail address
+- EMAIL_TIMEOUT: 20 seconds
+
+Note: For production, use environment variables for email credentials.
+
+OTP VERIFICATION SYSTEM
+-----------------------
+- OTP Code: 6-digit numeric code
+- Expiration: 10 minutes
+- Generation: Random 6-digit number
+- Storage: Stored in UserProfile model
+- Email: Sent via SMTP to user's registered email
+- Verification: Validates code and expiration time
+- Resend: Users can request new OTP codes
+
+SETUP INSTRUCTIONS
+------------------
+
+1. PREREQUISITES
+   - Python 3.11 or higher
+   - pip (Python package manager)
+   - Virtual environment (recommended)
+
+2. INSTALLATION STEPS
+
+   Step 1: Navigate to project directory
+   cd car_service_system
+
+   Step 2: Activate virtual environment (if using)
+   # Windows:
+   env\Scripts\activate
+   # Linux/Mac:
+   source env/bin/activate
+
+   Step 3: Install dependencies (if not already installed)
+   pip install django
+
+   Step 4: Run migrations
+   python manage.py makemigrations
+   python manage.py migrate
+
+   Step 5: Create superuser (optional, for admin access)
+   python manage.py createsuperuser
+
+   Step 6: Collect static files
+   python manage.py collectstatic
+
+   Step 7: Run development server
+   python manage.py runserver
+
+   Step 8: Access the application
+   Open browser: http://127.0.0.1:8000/
+
+3. CONFIGURATION
+
+   Email Configuration:
+   - Update EMAIL_HOST_USER in settings.py with your Gmail address
+   - Update EMAIL_HOST_PASSWORD with your Gmail app password
+   - Ensure Gmail "Less secure app access" is enabled OR use app-specific password
+
+   Database:
+   - Default: SQLite3 (db.sqlite3)
+   - For production, configure PostgreSQL or MySQL in settings.py
+
+   Static Files:
+   - STATIC_URL: 'static/'
+   - STATIC_ROOT: BASE_DIR / 'staticfiles'
+   - STATICFILES_DIRS: [BASE_DIR / 'static']
+
+4. FIRST TIME SETUP
+
+   After running migrations:
+   1. Create a superuser account for admin access
+   2. Access admin panel at /admin/
+   3. Create ServiceType entries (Oil Change, Brake Repair, etc.)
+   4. Test user registration and OTP verification
+
+USER ROLES
+----------
+
+1. CUSTOMER ROLE
+   - Can register vehicles
+   - Search for garages
+   - Book services
+   - View booking history
+   - Manage personal profile
+
+2. GARAGE ROLE
+   - Create garage profile
+   - Add/manage services
+   - Set service pricing
+   - View and manage bookings
+   - Update booking status
+
+SECURITY FEATURES
+-----------------
+- CSRF protection enabled
+- Password hashing (Django's default)
+- Email verification required
+- OTP-based authentication
+- Session-based authentication
+- Role-based access control
+- Secure password reset flow
+
+TEMPLATE SYSTEM
+---------------
+- Base template: templates/base.html
+- Bootstrap 5.3.0 for styling
+- Bootstrap Icons for icons
+- Responsive design
+- All child templates extend base.html
+
+STATIC FILES
+------------
+- Static files directory: static/
+- Collected static files: staticfiles/
+- Bootstrap CSS/JS loaded from CDN
+- Custom CSS in base.html
+
+DEVELOPMENT NOTES
+-----------------
+- DEBUG mode: Enabled (set to False in production)
+- Database: SQLite3 (change for production)
+- Secret Key: Change in production
+- ALLOWED_HOSTS: Configure for production
+- Email: Currently using Gmail SMTP
+
+PRODUCTION DEPLOYMENT CHECKLIST
+-------------------------------
+[ ] Set DEBUG = False
+[ ] Configure ALLOWED_HOSTS
+[ ] Use environment variables for SECRET_KEY
+[ ] Use environment variables for email credentials
+[ ] Configure PostgreSQL or MySQL database
+[ ] Set up proper static file serving
+[ ] Configure HTTPS/SSL
+[ ] Set up proper logging
+[ ] Configure CSRF_COOKIE_SECURE = True
+[ ] Configure SESSION_COOKIE_SECURE = True
+[ ] Set up backup system for database
+[ ] Configure proper email backend
+[ ] Set up monitoring and error tracking
+
+TESTING
+-------
+- Run Django system check:
+  python manage.py check
+
+- Test OTP generation:
+  python manage.py shell
+  >>> from accounts.utils import generate_otp
+  >>> generate_otp(6)
+
+- Test email configuration:
+  python manage.py shell
+  >>> from django.core.mail import send_mail
+  >>> send_mail('Test', 'Test message', 'from@example.com', ['to@example.com'])
+
+TROUBLESHOOTING
+---------------
+
+Issue: Base template not found
+Solution: Ensure TEMPLATES['DIRS'] includes BASE_DIR / 'templates'
+
+Issue: OTP email not sending
+Solution: 
+- Check email configuration in settings.py
+- Verify Gmail app password is correct
+- Check if email service is accessible
+- Check console for error messages (DEBUG mode)
+
+Issue: Static files not loading
+Solution:
+- Run: python manage.py collectstatic
+- Check STATIC_URL and STATIC_ROOT settings
+- Ensure static files directory exists
+
+Issue: Database errors
+Solution:
+- Run: python manage.py makemigrations
+- Run: python manage.py migrate
+- Check database file permissions
+
+CONTACT & SUPPORT
+------------------
+For issues or questions about this project, please refer to:
+- Django Documentation: https://docs.djangoproject.com/
+- Project repository (if available)
+- Development team
+
+VERSION INFORMATION
+-------------------
+- Django Version: 5.2.8
+- Python Version: 3.11+
+- Project Version: 1.0
+- Last Updated: 2024
+
+LICENSE
+-------
+[Add your license information here]
+
+================================================================================
+                            END OF DOCUMENT
+================================================================================
+

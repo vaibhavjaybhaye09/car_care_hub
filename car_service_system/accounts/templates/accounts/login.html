@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block content %}
+{% if messages %}
+    <ul>
+      {% for message in messages %}
+        <li>{{ message }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+    <h2>Login</h2>
+    <form method="post">
+        {% csrf_token %}
+        {% if form.errors %}
+          <div style="color:red;">
+              <strong>Form errors:</strong>
+              {{ form.non_field_errors }}
+          </div>
+      {% endif %}
+        <div>
+            <label for="username">Username:</label>
+            <input type="text" name="username" id="username" required />
+        </div>
+        <div>
+            <label for="password">Password:</label>
+            <input type="password" name="password" id="password" required />
+            <button type="button" id="togglePassword">Show</button>
+        </div>
+        <button type="submit">Login</button>
+    </form>
+    <p><a href="{% url 'accounts:signup' %}">Don't have an account? Sign up</a></p>
+    <p><a href="{% url 'accounts:forgot_password' %}">Forgot Password?</a></p>
+    <script>
+      document.getElementById('togglePassword').addEventListener('click', function(){
+        var password = document.getElementById('password');
+        var isText = password.type === 'text';
+        password.type = isText ? 'password' : 'text';
+        this.textContent = isText ? 'Show' : 'Hide';
+      });
+    </script>
+{% endblock %}
+

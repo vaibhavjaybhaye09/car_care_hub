@@ -1,0 +1,181 @@
+{% extends 'base.html' %}
+{% block title %}Home - Car Service System{% endblock %}
+{% block content %}
+<!-- Hero Section -->
+<div class="hero-section bg-primary text-white text-center py-5 mb-5 rounded">
+    <div class="container">
+        <h1 class="display-4 fw-bold mb-3">
+            <i class="bi bi-wrench-adjustable-circle"></i> Welcome to Car Service System
+        </h1>
+        <p class="lead mb-4">Book your car service appointments easily and manage your vehicle maintenance</p>
+        {% if not user.is_authenticated %}
+        <div class="d-flex gap-3 justify-content-center flex-wrap">
+            <a href="{% url 'accounts:signup' %}" class="btn btn-light btn-lg">
+                <i class="bi bi-person-plus"></i> Get Started
+            </a>
+            <a href="{% url 'accounts:user_login' %}" class="btn btn-outline-light btn-lg">
+                <i class="bi bi-box-arrow-in-right"></i> Login
+            </a>
+        </div>
+        {% else %}
+        <div class="d-flex gap-3 justify-content-center flex-wrap">
+            {% if user.role == 'customer' %}
+            <a href="{% url 'customers:dashboard' %}" class="btn btn-light btn-lg">
+                <i class="bi bi-speedometer2"></i> Go to Dashboard
+            </a>
+            <a href="{% url 'customers:search_garages' %}" class="btn btn-outline-light btn-lg">
+                <i class="bi bi-search"></i> Search Garages
+            </a>
+            {% elif user.role == 'garage' %}
+            <a href="{% url 'garage_dashboard' %}" class="btn btn-light btn-lg">
+                <i class="bi bi-speedometer2"></i> Go to Dashboard
+            </a>
+            <a href="{% url 'garage_profile' %}" class="btn btn-outline-light btn-lg">
+                <i class="bi bi-person-circle"></i> Manage Profile
+            </a>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Features Section -->
+<div class="row g-4 mb-5">
+    <div class="col-md-4">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body text-center">
+                <div class="mb-3">
+                    <i class="bi bi-search-heart display-4 text-primary"></i>
+                </div>
+                <h5 class="card-title">Find Garages</h5>
+                <p class="card-text">Search for nearby garages and service centers based on your location. Compare services and prices.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body text-center">
+                <div class="mb-3">
+                    <i class="bi bi-calendar-check display-4 text-success"></i>
+                </div>
+                <h5 class="card-title">Book Services</h5>
+                <p class="card-text">Easily book car service appointments online. Choose your preferred date and time.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body text-center">
+                <div class="mb-3">
+                    <i class="bi bi-clipboard-check display-4 text-info"></i>
+                </div>
+                <h5 class="card-title">Track Bookings</h5>
+                <p class="card-text">Manage all your bookings in one place. Track service status and history.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- How It Works Section -->
+<div class="row mb-5">
+    <div class="col-12">
+        <h2 class="text-center mb-4">How It Works</h2>
+        <div class="row g-4">
+            <div class="col-md-3 text-center">
+                <div class="step-number bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px; font-size: 24px; font-weight: bold;">1</div>
+                <h5>Sign Up</h5>
+                <p>Create your account as a customer or garage owner</p>
+            </div>
+            <div class="col-md-3 text-center">
+                <div class="step-number bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px; font-size: 24px; font-weight: bold;">2</div>
+                <h5>Add Vehicle</h5>
+                <p>Register your vehicle details (for customers)</p>
+            </div>
+            <div class="col-md-3 text-center">
+                <div class="step-number bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px; font-size: 24px; font-weight: bold;">3</div>
+                <h5>Search & Book</h5>
+                <p>Find garages and book your service appointment</p>
+            </div>
+            <div class="col-md-3 text-center">
+                <div class="step-number bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px; font-size: 24px; font-weight: bold;">4</div>
+                <h5>Get Service</h5>
+                <p>Visit the garage and get your vehicle serviced</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Services Section -->
+<div class="row mb-5">
+    <div class="col-12">
+        <h2 class="text-center mb-4">Our Services</h2>
+        <div class="row g-3">
+            <div class="col-md-6 col-lg-3">
+                <div class="card border-primary">
+                    <div class="card-body text-center">
+                        <i class="bi bi-droplet display-6 text-primary mb-2"></i>
+                        <h6 class="card-title">Oil Change</h6>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="card border-success">
+                    <div class="card-body text-center">
+                        <i class="bi bi-circle-square display-6 text-success mb-2"></i>
+                        <h6 class="card-title">Brake Repair</h6>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="card border-info">
+                    <div class="card-body text-center">
+                        <i class="bi bi-gear display-6 text-info mb-2"></i>
+                        <h6 class="card-title">Engine Service</h6>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="card border-warning">
+                    <div class="card-body text-center">
+                        <i class="bi bi-tools display-6 text-warning mb-2"></i>
+                        <h6 class="card-title">General Repair</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Call to Action -->
+{% if not user.is_authenticated %}
+<div class="row">
+    <div class="col-12">
+        <div class="card bg-light border-0">
+            <div class="card-body text-center py-5">
+                <h3 class="mb-3">Ready to Get Started?</h3>
+                <p class="lead mb-4">Join thousands of satisfied customers and garage owners</p>
+                <a href="{% url 'accounts:signup' %}" class="btn btn-primary btn-lg me-2">
+                    <i class="bi bi-person-plus"></i> Sign Up Now
+                </a>
+                <a href="{% url 'accounts:user_login' %}" class="btn btn-outline-primary btn-lg">
+                    <i class="bi bi-box-arrow-in-right"></i> Login
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<style>
+.hero-section {
+    background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%);
+    padding: 60px 20px;
+}
+.card {
+    transition: transform 0.2s;
+}
+.card:hover {
+    transform: translateY(-5px);
+}
+</style>
+{% endblock %}

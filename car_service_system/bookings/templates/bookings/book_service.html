@@ -1,0 +1,56 @@
+<!-- {% extends 'base.html' %}
+{% block title %}Book a Service{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2 class="mb-3">Book a Service</h2>
+
+  <form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary mt-3">Confirm Booking</button>
+  </form>
+</div>
+{% endblock %} -->
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from .models import Booking
+from .forms import BookingForm
+from garage.models import Garage
+
+@login_required
+def book_service(request, garage_id=None):
+    # Get the selected garage
+    garage = get_object_or_404(Garage, id=garage_id) if garage_id else None
+
+    if request.method == 'POST':
+        form = BookingForm(request.POST, user=request.user)
+        if form.is_valid():
+            booking = form.save(commit=False)
+            
+            # Assign the current user as customer
+            booking.customer = request.user
+            booking.status = 'Booked'
+            
+            # Explicitly assign the garage (so it appears in the garage dashboard)
+            booking.garage = garage
+            
+            # Optional: ensure vehicle and service are saved
+            booking.vehicle = form.cleaned_data.get('vehicle')
+            booking.service = form.cleaned_data.get('service')
+            
+            # Save booking
+            booking.save()
+            
+            messages.success(request, 'Booking confirmed successfully!')
+            return redirect('bookings:booking_list')  # Namespaced redirect
+
+    else:
+        # Prefill the garage if provided
+        form = BookingForm(user=request.user, initial={'garage': garage})
+
+    return render(request, 'bookings/book_service.html', {
+        'form': form,
+        'garage': garage
+    })
