@@ -1,56 +1,61 @@
-<!-- {% extends 'base.html' %}
-{% block title %}Book a Service{% endblock %}
-
+{% extends 'base.html' %}
+{% block title %}Book Service - {{ garage.name }}{% endblock %}
 {% block content %}
-<div class="container mt-4">
-  <h2 class="mb-3">Book a Service</h2>
+<div class="container mt-5">
+  <div class="row">
+    <!-- Garage Details -->
+    <div class="col-md-6 mb-4">
+      <div class="card shadow-sm border-0">
+        <div class="card-header bg-primary text-white">
+          <h5 class="mb-0"><i class="bi bi-building"></i> {{ garage.name }}</h5>
+        </div>
+        <div class="card-body">
+          <p><strong>Address:</strong> {{ garage.address }}, {{ garage.city }}, {{ garage.state }}</p>
+          <p><strong>Phone:</strong> {{ garage.phone }}</p>
+          <p><strong>Rating:</strong> ⭐ {{ garage.rating|default:"N/A" }}</p>
+          <p><strong>Description:</strong> {{ garage.description|default:"No description available." }}</p>
 
-  <form method="POST">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn btn-primary mt-3">Confirm Booking</button>
-  </form>
+          <h6 class="mt-4">Available Services:</h6>
+          <ul class="list-group">
+            {% for s in garage.services.all %}
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                {{ s.service_type.name }}
+                <span class="badge bg-secondary">₹{{ s.price }}</span>
+              </li>
+            {% empty %}
+              <li class="list-group-item text-muted">No services added yet.</li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Booking Form -->
+    <div class="col-md-6">
+      <div class="card shadow-sm border-0">
+        <div class="card-header bg-success text-white">
+          <h5 class="mb-0"><i class="bi bi-calendar-check"></i> Book a Service</h5>
+        </div>
+        <div class="card-body">
+          <form method="POST">
+            {% csrf_token %}
+            {% for field in form %}
+              <div class="mb-3">
+                <label class="form-label">{{ field.label }}</label>
+                {{ field }}
+                {% if field.errors %}
+                  <div class="text-danger small">{{ field.errors|striptags }}</div>
+                {% endif %}
+              </div>
+            {% endfor %}
+            <div class="text-end">
+              <button type="submit" class="btn btn-success">Confirm Booking</button>
+              <a href="{% url 'customers:search_garages' %}" class="btn btn-outline-secondary">Cancel</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
-{% endblock %} -->
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required
-from django.contrib import messages
-from .models import Booking
-from .forms import BookingForm
-from garage.models import Garage
-
-@login_required
-def book_service(request, garage_id=None):
-    # Get the selected garage
-    garage = get_object_or_404(Garage, id=garage_id) if garage_id else None
-
-    if request.method == 'POST':
-        form = BookingForm(request.POST, user=request.user)
-        if form.is_valid():
-            booking = form.save(commit=False)
-            
-            # Assign the current user as customer
-            booking.customer = request.user
-            booking.status = 'Booked'
-            
-            # Explicitly assign the garage (so it appears in the garage dashboard)
-            booking.garage = garage
-            
-            # Optional: ensure vehicle and service are saved
-            booking.vehicle = form.cleaned_data.get('vehicle')
-            booking.service = form.cleaned_data.get('service')
-            
-            # Save booking
-            booking.save()
-            
-            messages.success(request, 'Booking confirmed successfully!')
-            return redirect('bookings:booking_list')  # Namespaced redirect
-
-    else:
-        # Prefill the garage if provided
-        form = BookingForm(user=request.user, initial={'garage': garage})
-
-    return render(request, 'bookings/book_service.html', {
-        'form': form,
-        'garage': garage
-    })
+{% endblock %}
