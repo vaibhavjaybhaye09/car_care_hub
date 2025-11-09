@@ -8,7 +8,6 @@ User = settings.AUTH_USER_MODEL
 # Garage Profile Model
 # -------------------------------------------------------
 class Garage(models.Model):
-    id = models.IntegerField()
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='garage_profile')
     name = models.CharField(max_length=150)
     phone = models.CharField(max_length=15)

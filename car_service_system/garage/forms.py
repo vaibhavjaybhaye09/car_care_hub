@@ -20,7 +20,7 @@ class GarageProfileForm(forms.ModelForm):
 class GarageServiceForm(forms.ModelForm):
     class Meta:
         model = GarageService
-        fields = ['id','service_type', 'price', 'opening_hours', 'custom_text']
+        fields = ['service_type', 'price', 'opening_hours', 'custom_text']
         widgets = {
             'service_type': forms.Select(attrs={'class': 'form-select'}),
             'price': forms.NumberInput(attrs={'class': 'form-control'}),
