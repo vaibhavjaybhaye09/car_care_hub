@@ -1,14 +1,9 @@
 from django.db import models
 from django.conf import settings
-from garage.models import Garage
-from bookings.models import Booking
+from garage.models import Garage  # ✅ safe import
 
 User = settings.AUTH_USER_MODEL
 
-
-# -------------------------------------------------------
-# 1️⃣ Customer Profile
-# -------------------------------------------------------
 class CustomerProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='customer_profile')
     phone = models.CharField(max_length=15, blank=True)
@@ -29,15 +24,11 @@ class CustomerProfile(models.Model):
         return f"{self.user.username}'s Profile"
 
 
-# -------------------------------------------------------
-# 2️⃣ Vehicle Information
-# -------------------------------------------------------
 class Vehicle(models.Model):
     VEHICLE_TYPES = [
         ('2W', 'Two Wheeler'),
         ('4W', 'Four Wheeler'),
     ]
-
     FUEL_TYPES = [
         ('Petrol', 'Petrol'),
         ('Diesel', 'Diesel'),
@@ -46,11 +37,7 @@ class Vehicle(models.Model):
         ('CNG', 'CNG'),
     ]
 
-    customer = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        related_name='vehicles'
-    )
+    customer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='vehicles')
     vehicle_type = models.CharField(max_length=2, choices=VEHICLE_TYPES)
     brand = models.CharField(max_length=50)
     model = models.CharField(max_length=50)
@@ -64,28 +51,22 @@ class Vehicle(models.Model):
         return f"{self.brand} {self.model} ({self.registration_number})"
 
 
-# -------------------------------------------------------
-# 3️⃣ Customer Reviews / Feedback (for Garages)
-# -------------------------------------------------------
 class Review(models.Model):
     customer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reviews')
     garage = models.ForeignKey(Garage, on_delete=models.CASCADE, related_name='reviews')
-    booking = models.ForeignKey(Booking, on_delete=models.SET_NULL, null=True, blank=True)
+    booking = models.ForeignKey('bookings.Booking', on_delete=models.SET_NULL, null=True, blank=True)  # ✅ fixed here
     rating = models.PositiveIntegerField(default=5)
     comment = models.TextField(blank=True)
     date = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        unique_together = ('customer', 'garage')  # 1 review per customer per garage
+        unique_together = ('customer', 'garage')
         ordering = ['-date']
 
     def __str__(self):
         return f"Review by {self.customer.username} for {self.garage.name} ({self.rating}⭐)"
 
 
-# -------------------------------------------------------
-# 4️⃣ Notifications (optional)
-# -------------------------------------------------------
 class Notification(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='notifications')
     title = models.CharField(max_length=100)

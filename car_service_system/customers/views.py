@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db.models import Q
-from .models import Vehicle, Review
+from customers.models import Vehicle, Review
 from .forms import VehicleForm, ReviewForm
 from garage.models import Garage
 from bookings.models import Booking
