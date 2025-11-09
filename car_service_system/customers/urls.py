@@ -21,4 +21,5 @@ urlpatterns = [
 
     # Reviews / feedback
     path('garage/<int:garage_id>/review/', views.add_review, name='add_review'),
+    path('profile/', views.customers_profile, name='customer_profile'),
 ]

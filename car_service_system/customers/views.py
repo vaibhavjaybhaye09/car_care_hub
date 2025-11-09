@@ -145,3 +145,8 @@ def add_review(request, garage_id):
     else:
         form = ReviewForm()
     return render(request, 'customers/add_review.html', {'form': form, 'garage': garage})
+
+
+@login_required
+def customers_profile(request):
+    return render(request, 'customers/customer_profile.html')
