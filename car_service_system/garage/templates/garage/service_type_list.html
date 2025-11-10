@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Service Types</h2>
+<a href="{% url 'add_service_type' %}" class="btn btn-primary mb-3">Add New Service Type</a>
+
+<table class="table table-bordered">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Name</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for st in service_types %}
+      <tr>
+        <td>{{ forloop.counter }}</td>
+        <td>{{ st.name }}</td>
+        <td>
+          <a href="{% url 'edit_service_type' st.id %}" class="btn btn-warning btn-sm">Edit</a>
+          <a href="{% url 'delete_service_type' st.id %}" class="btn btn-danger btn-sm">Delete</a>
+        </td>
+      </tr>
+    {% empty %}
+      <tr><td colspan="3" class="text-center">No service types added yet.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

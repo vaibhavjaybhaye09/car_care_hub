@@ -1,381 +1,1768 @@
 {% extends 'base.html' %}
-{% block title %}Home - Car Service System{% endblock %}
+{% block title %}Home - Car Care Hub{% endblock %}
 {% load static %}
+{% block main_class %}{% endblock %}
 {% block content %}
-<link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+<style>
+    /* Hero Section Enhanced */
+    .hero-section {
+        background: linear-gradient(135deg, var(--brand-blue) 0%, var(--brand-purple) 55%, var(--brand-indigo) 100%);
+        padding: 0;
+        position: relative;
+        overflow: hidden;
+        border-radius: 20px;
+        margin-bottom: 80px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+    }
+
+    .hero-section::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+        animation: pulse 15s infinite;
+    }
+
+    @keyframes pulse {
+        0%, 100% { transform: scale(1); opacity: 0.5; }
+        50% { transform: scale(1.1); opacity: 0.8; }
+    }
+
+    .hero-content {
+        position: relative;
+        z-index: 2;
+    }
+
+    /* Hero Carousel */
+    .hero-carousel,
+    .hero-carousel .carousel-inner,
+    .hero-carousel .carousel-item {
+        height: 520px;
+        border-radius: 20px;
+    }
+
+    .hero-carousel .carousel-item {
+        position: relative;
+        background-position: center;
+        background-size: cover;
+        background-repeat: no-repeat;
+    }
+
+    .hero-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(135deg, rgba(0,0,0,0.45), rgba(0,0,0,0.25));
+        border-radius: 20px;
+    }
+
+    .hero-caption {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 0 20px;
+    }
+
+    .hero-section h1 {
+        font-size: 3.5rem;
+        font-weight: 800;
+        margin-bottom: 25px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        animation: fadeInDown 1s ease-out;
+        color: white;
+    }
+
+    .hero-section .lead {
+        font-size: 1.4rem;
+        margin-bottom: 40px;
+        opacity: 0.95;
+        animation: fadeInUp 1s ease-out 0.3s both;
+        color: white;
+    }
+
+    @keyframes fadeInDown {
+        from {
+            opacity: 0;
+            transform: translateY(-30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .hero-buttons {
+        animation: fadeInUp 1s ease-out 0.6s both;
+    }
+
+    .hero-buttons .btn {
+        padding: 15px 35px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        border-radius: 50px;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .hero-buttons .btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .hero-carousel .carousel-indicators [data-bs-target] {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background-color: rgba(255,255,255,0.7);
+    }
+
+    .hero-carousel .carousel-indicators .active {
+        background-color: #fff;
+    }
+
+    .hero-carousel .carousel-control-prev,
+    .hero-carousel .carousel-control-next {
+        width: 8%;
+    }
+
+    /* Features Section Enhanced */
+    .features-section {
+        margin-bottom: 100px;
+        background: linear-gradient(135deg, var(--brand-surface-alt) 0%, #f8f9ff 45%, #e0e7ff 100%);
+        border-radius: 20px;
+        padding: 80px 40px;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 15px 45px rgba(102, 126, 234, 0.18);
+    }
+
+    .features-section::before,
+    .features-section::after {
+        content: '';
+        position: absolute;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(118, 75, 162, 0.2), transparent 70%);
+        z-index: 0;
+    }
+
+    .features-section::before {
+        width: 260px;
+        height: 260px;
+        top: -120px;
+        right: -120px;
+    }
+
+    .features-section::after {
+        width: 220px;
+        height: 220px;
+        bottom: -100px;
+        left: -80px;
+    }
+
+    .section-title {
+        text-align: center;
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 60px;
+        color: var(--brand-text);
+        position: relative;
+    }
+
+    .section-title::after {
+        content: '';
+        display: block;
+        width: 80px;
+        height: 4px;
+        background: linear-gradient(90deg, var(--brand-blue), var(--brand-purple));
+        margin: 20px auto;
+        border-radius: 2px;
+    }
+
+    .feature-card {
+        background: white;
+        border-radius: 20px;
+        padding: 40px 30px;
+        text-align: center;
+        height: 100%;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        box-shadow: 0 10px 35px rgba(102, 126, 234, 0.18);
+        border: 2px solid transparent;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .feature-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+        transition: left 0.5s;
+    }
+
+    .feature-card:hover::before {
+        left: 100%;
+    }
+
+    .feature-card:hover {
+        transform: translateY(-15px) scale(1.02);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+        border-color: #667eea;
+    }
+
+    .feature-icon {
+        width: 100px;
+        height: 100px;
+        margin: 0 auto 25px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--brand-blue), var(--brand-purple));
+        color: white;
+        font-size: 2.5rem;
+        transition: all 0.4s ease;
+        box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+    }
+
+    .feature-card:hover .feature-icon {
+        transform: rotate(360deg) scale(1.1);
+        background: linear-gradient(135deg, var(--brand-purple), var(--brand-blue));
+    }
+
+    .feature-card h5 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 15px;
+        color: var(--brand-text);
+    }
+
+    .feature-card p {
+        color: #6c757d;
+        line-height: 1.8;
+        font-size: 1rem;
+    }
+
+    /* How It Works Section */
+    .how-it-works {
+        background: linear-gradient(135deg, var(--brand-surface) 0%, #e0e7ff 100%);
+        padding: 80px 20px;
+        border-radius: 20px;
+        margin-bottom: 80px;
+    }
+
+    .how-it-works h2 {
+        font-weight: 800;
+        color: var(--brand-text);
+        font-size: 2.5rem;
+    }
+
+    .timeline {
+        position: relative;
+        border-left: 4px solid var(--brand-blue);
+        margin-left: 50px;
+        padding-left: 40px;
+    }
+
+    .timeline-item {
+        position: relative;
+        margin-bottom: 60px;
+        animation: fadeInLeft 0.8s ease-out both;
+    }
+
+    .timeline-item:nth-child(1) { animation-delay: 0.1s; }
+    .timeline-item:nth-child(2) { animation-delay: 0.3s; }
+    .timeline-item:nth-child(3) { animation-delay: 0.5s; }
+
+    @keyframes fadeInLeft {
+        from {
+            opacity: 0;
+            transform: translateX(-30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    .timeline-icon {
+        position: absolute;
+        left: -62px;
+        top: 0;
+        background: linear-gradient(135deg, var(--brand-blue), var(--brand-purple));
+        color: #fff;
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        font-size: 20px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        transition: all 0.3s ease;
+    }
+
+    .timeline-item:hover .timeline-icon {
+        transform: scale(1.2) rotate(360deg);
+        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+    }
+
+    .timeline-content {
+        background: white;
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+    }
+
+    .timeline-content:hover {
+        transform: translateX(10px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    }
+
+    .timeline-content h5 {
+        color: var(--brand-text);
+        font-weight: 700;
+        margin-bottom: 10px;
+        font-size: 1.3rem;
+    }
+
+    .timeline-content p {
+        color: #6c757d;
+        margin-bottom: 20px;
+    }
+
+    .step-img {
+        max-width: 250px;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+    }
+
+    .step-img:hover {
+        transform: scale(1.05);
+    }
+
+    /* Services Section */
+    .services-section {
+        margin-bottom: 80px;
+    }
+
+    .services-section .section-title {
+        margin-bottom: 30px;
+    }
+
+    .services-subtitle {
+        text-align: center;
+        color: #6b7a99;
+        margin-bottom: 40px;
+    }
+
+    .service-card {
+        background: linear-gradient(180deg, #ffffff, var(--brand-surface-alt));
+        border-radius: 18px;
+        padding: 28px 22px;
+        text-align: left;
+        transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+        box-shadow: 0 12px 35px rgba(102, 126, 234, 0.15);
+        border: 2px solid rgba(102, 126, 234, 0.12);
+        height: 100%;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .service-card::after {
+        content: '';
+        position: absolute;
+        top: -40%;
+        right: -40%;
+        width: 80%;
+        height: 80%;
+        background: radial-gradient(circle, rgba(102,126,234,0.18), transparent 70%);
+        transform: rotate(25deg);
+    }
+
+    .service-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 20px 50px rgba(118, 75, 162, 0.22);
+        border-color: rgba(102, 126, 234, 0.35);
+    }
+
+    .service-icon {
+        font-size: 2.4rem;
+        margin-bottom: 14px;
+        display: inline-flex;
+        width: 56px;
+        height: 56px;
+        align-items: center;
+        justify-content: center;
+        border-radius: 14px;
+        background: linear-gradient(135deg, var(--brand-blue), var(--brand-purple));
+        color: #fff;
+        box-shadow: 0 12px 26px rgba(102, 126, 234, 0.3);
+    }
+
+    .service-card h6 {
+        font-size: 1.15rem;
+        font-weight: 700;
+        color: var(--brand-text);
+        margin: 8px 0 8px;
+    }
+
+    .service-desc {
+        color: #5c6c80;
+        font-size: 0.98rem;
+        margin-bottom: 14px;
+    }
+
+    .service-list {
+        list-style: none;
+        padding: 0;
+        margin: 0 0 4px;
+    }
+
+    .service-list li {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: #6b7a99;
+        font-size: 0.95rem;
+        margin-bottom: 8px;
+    }
+
+    .service-list li i {
+        color: #22c55e;
+    }
+
+    .service-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 10px;
+        background: rgba(102, 126, 234, 0.12);
+        color: #4c51bf;
+        border-radius: 999px;
+        font-size: 0.8rem;
+        font-weight: 600;
+    }
+
+    /* About Section */
+    .about-section {
+        background: linear-gradient(135deg, var(--brand-surface) 0%, var(--brand-surface-alt) 100%);
+        border-radius: 20px;
+        padding: 80px 40px;
+        margin-bottom: 80px;
+        box-shadow: 0 15px 45px rgba(102, 126, 234, 0.15);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .about-section::before {
+        content: '';
+        position: absolute;
+        top: -120px;
+        right: -120px;
+        width: 280px;
+        height: 280px;
+        background: radial-gradient(circle, rgba(118, 75, 162, 0.25), transparent 70%);
+        filter: blur(2px);
+    }
+
+    .about-section::after {
+        content: '';
+        position: absolute;
+        bottom: -140px;
+        left: -100px;
+        width: 260px;
+        height: 260px;
+        background: radial-gradient(circle, rgba(102, 126, 234, 0.2), transparent 70%);
+        filter: blur(3px);
+    }
+
+    .about-content {
+        position: relative;
+        z-index: 1;
+    }
+
+    .about-highlight {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 18px;
+        border-radius: 30px;
+        background: rgba(102, 126, 234, 0.15);
+        color: #4c51bf;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-size: 0.85rem;
+    }
+
+    .about-section h2 {
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: var(--brand-text);
+        margin: 25px 0 20px;
+    }
+
+    .about-section p {
+        color: #5c6c80;
+        line-height: 1.8;
+        font-size: 1.05rem;
+        margin-bottom: 20px;
+    }
+
+    .about-badges {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        margin: 25px 0 35px;
+    }
+
+    .about-badge {
+        background: white;
+        border-radius: 12px;
+        padding: 14px 18px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 600;
+        color: #3b4a69;
+    }
+
+    .about-metrics {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 30px;
+    }
+
+    .about-metric {
+        background: white;
+        border-radius: 18px;
+        padding: 25px;
+        flex: 1 1 220px;
+        box-shadow: 0 15px 35px rgba(102, 126, 234, 0.18);
+        text-align: center;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .about-metric:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 20px 45px rgba(118, 75, 162, 0.25);
+    }
+
+    .about-metric h3 {
+        font-size: 2.2rem;
+        font-weight: 800;
+        color: #4c51bf;
+        margin-bottom: 8px;
+    }
+
+    .about-metric span {
+        display: block;
+        color: #6b7a99;
+        font-size: 0.95rem;
+        font-weight: 500;
+    }
+
+    .about-image {
+        position: relative;
+        z-index: 1;
+        text-align: center;
+    }
+
+    .about-image img {
+        max-width: 100%;
+        border-radius: 20px;
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.18);
+        transition: transform 0.4s ease;
+    }
+
+    .about-image img:hover {
+        transform: translateY(-10px);
+    }
+
+    /* Platform Section */
+    .platform-section {
+        background: linear-gradient(135deg, var(--brand-midnight) 0%, #312e81 100%);
+        color: #f1f5f9;
+        border-radius: 20px;
+        padding: 90px 40px;
+        margin-bottom: 80px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .platform-section::before,
+    .platform-section::after {
+        content: '';
+        position: absolute;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(102, 126, 234, 0.5), transparent 70%);
+        z-index: 0;
+    }
+
+    .platform-section::before {
+        width: 280px;
+        height: 280px;
+        top: -120px;
+        left: -120px;
+    }
+
+    .platform-section::after {
+        width: 320px;
+        height: 320px;
+        bottom: -160px;
+        right: -160px;
+    }
+
+    .platform-section .section-title {
+        color: white;
+    }
+
+    .platform-subtitle {
+        text-align: center;
+        color: #cbd5f5;
+        margin: 0 auto 50px;
+        max-width: 720px;
+        font-size: 1.05rem;
+    }
+
+    .platform-card {
+        background: rgba(11, 26, 45, 0.85);
+        border-radius: 18px;
+        padding: 28px;
+        border: 1px solid rgba(148, 163, 184, 0.2);
+        box-shadow: 0 15px 45px rgba(13, 27, 42, 0.45);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        height: 100%;
+        position: relative;
+        overflow: hidden;
+        z-index: 1;
+    }
+
+    .platform-card::after {
+        content: '';
+        position: absolute;
+        width: 160px;
+        height: 160px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(118, 75, 162, 0.35), transparent 70%);
+        top: -80px;
+        right: -60px;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .platform-card:hover {
+        transform: translateY(-12px);
+        box-shadow: 0 30px 60px rgba(13, 27, 42, 0.55);
+    }
+
+    .platform-card:hover::after {
+        opacity: 1;
+    }
+
+    .platform-icon {
+        width: 54px;
+        height: 54px;
+        border-radius: 14px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(102, 126, 234, 0.25);
+        color: #a5b4fc;
+        font-size: 1.6rem;
+        margin-bottom: 18px;
+    }
+
+    .platform-card h4 {
+        font-size: 1.25rem;
+        font-weight: 700;
+        margin-bottom: 12px;
+        color: #e2e8f0;
+    }
+
+    .platform-card p {
+        color: #cbd5f5;
+        margin-bottom: 16px;
+        line-height: 1.7;
+    }
+
+    .platform-meta {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: #94a3b8;
+        font-size: 0.9rem;
+        font-weight: 600;
+    }
+
+    .platform-cta {
+        margin-top: 50px;
+        text-align: center;
+    }
+
+    .platform-cta .btn {
+        border-radius: 999px;
+        padding: 12px 30px;
+        font-weight: 600;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        border: none;
+        color: white;
+        box-shadow: 0 20px 40px rgba(102, 126, 234, 0.25);
+    }
+
+    .platform-cta .btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 25px 60px rgba(118, 75, 162, 0.35);
+    }
+
+    /* Testimonials Section */
+    .testimonials-section {
+        margin-bottom: 80px;
+        background: linear-gradient(135deg, #f5f7fa 0%, #ffffff 100%);
+        padding: 60px 20px;
+        border-radius: 20px;
+    }
+
+    .testimonial-card {
+        background: white;
+        border-radius: 15px;
+        padding: 30px;
+        height: 100%;
+        box-shadow: 0 5px 25px rgba(0, 0, 0, 0.08);
+        transition: all 0.4s ease;
+        border-left: 4px solid transparent;
+    }
+
+    .testimonial-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+        border-left-color: #667eea;
+    }
+
+    .testimonial-icon {
+        font-size: 2.5rem;
+        margin-bottom: 20px;
+        opacity: 0.7;
+    }
+
+    .testimonial-text {
+        font-style: italic;
+        color: #555;
+        line-height: 1.8;
+        margin-bottom: 20px;
+        font-size: 1rem;
+    }
+
+    .testimonial-author {
+        font-weight: 700;
+        color: #2c3e50;
+        margin-bottom: 5px;
+    }
+
+    .testimonial-location {
+        color: #6c757d;
+        font-size: 0.9rem;
+    }
+
+    /* CTA Section */
+    .cta-section {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 80px 20px;
+        border-radius: 20px;
+        text-align: center;
+        color: white;
+        margin-bottom: 50px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+    }
+
+    .cta-section h3 {
+        font-size: 2.5rem;
+        font-weight: 800;
+        margin-bottom: 20px;
+    }
+
+    .cta-section p {
+        font-size: 1.2rem;
+        margin-bottom: 40px;
+        opacity: 0.95;
+    }
+
+    .cta-section .btn {
+        padding: 15px 40px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        border-radius: 50px;
+        margin: 0 10px;
+        transition: all 0.3s ease;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .cta-section .btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Garages Section */
+    .garages-section {
+        background: linear-gradient(135deg, #ffffff 0%, var(--brand-surface-alt) 100%);
+        border-radius: 20px;
+        padding: 80px 40px;
+        margin-bottom: 80px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+    }
+
+    /* Contact Section */
+    .contact-section {
+        background: linear-gradient(135deg, #ffffff 0%, var(--brand-surface) 100%);
+        border-radius: 20px;
+        padding: 80px 40px;
+        margin-bottom: 80px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+    }
+
+    .contact-card {
+        background: #fff;
+        border-radius: 16px;
+        padding: 32px;
+        box-shadow: 0 15px 40px rgba(102, 126, 234, 0.14);
+        height: 100%;
+    }
+
+    .contact-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 16px;
+        border-radius: 30px;
+        background: rgba(102, 126, 234, 0.12);
+        color: #4c51bf;
+        font-weight: 600;
+        letter-spacing: .5px;
+    }
+
+    .contact-section .form-control,
+    .contact-section .form-select {
+        border-radius: 12px;
+        padding: 12px 14px;
+        border: 2px solid #eef0f6;
+    }
+
+    .contact-section .form-control:focus,
+    .contact-section .form-select:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 4px rgba(102,126,234,0.15);
+    }
+
+    .contact-info {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        margin-bottom: 16px;
+    }
+
+    .contact-icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: #fff;
+        box-shadow: 0 8px 20px rgba(118, 75, 162, 0.25);
+        flex-shrink: 0;
+        font-size: 1.1rem;
+    }
+
+    .contact-section .btn-primary {
+        padding: 12px 18px;
+        border-radius: 12px;
+        font-weight: 600;
+    }
+
+    .garages-section .underline {
+        width: 80px;
+        height: 4px;
+        background: linear-gradient(90deg, #667eea, #764ba2);
+        border-radius: 2px;
+        margin-bottom: 30px;
+    }
+
+    .garages-section h2 {
+        font-weight: 800;
+        color: #2c3e50;
+        margin-bottom: 25px;
+    }
+
+    .garages-section p {
+        color: #6c757d;
+        line-height: 1.8;
+        font-size: 1.1rem;
+    }
+
+    .garages-section ul li {
+        font-size: 1.1rem;
+        margin-bottom: 15px;
+        color: #555;
+    }
+
+    .garage-image {
+        max-width: 100%;
+        border-radius: 15px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+        transition: transform 0.4s ease;
+    }
+
+    .garage-image:hover {
+        transform: scale(1.05) rotate(2deg);
+    }
+
+    /* Banner Section */
+    .banner {
+        position: relative;
+        background: linear-gradient(135deg, #ffc107 40%, #f8f9fa 40%);
+        padding: 80px 20px;
+        overflow: hidden;
+        border-radius: 20px;
+        margin-bottom: 80px;
+    }
+
+    .gear-icon {
+        position: absolute;
+        top: -50px;
+        left: -50px;
+        font-size: 300px;
+        color: rgba(255, 255, 255, 0.3);
+        z-index: 1;
+        animation: rotate 20s linear infinite;
+    }
+
+    @keyframes rotate {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+
+    .banner-title {
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: #212529;
+        margin-bottom: 15px;
+    }
+
+    .banner-title span {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .banner-subtitle {
+        font-size: 1.2rem;
+        color: #555;
+        margin-bottom: 30px;
+    }
+
+    .brand-logos {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 25px;
+        justify-content: flex-start;
+        margin-top: 30px;
+    }
+
+    .brand-logos img {
+        height: 50px;
+        width: auto;
+        filter: grayscale(30%);
+        transition: all 0.3s ease;
+        opacity: 0.8;
+    }
+
+    .brand-logos img:hover {
+        transform: scale(1.15);
+        filter: grayscale(0%);
+        opacity: 1;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .hero-section h1 {
+            font-size: 2.5rem;
+        }
+
+        .hero-section .lead {
+            font-size: 1.1rem;
+        }
+
+        .section-title {
+            font-size: 2rem;
+        }
+
+        .features-section {
+            padding: 50px 25px;
+        }
+
+        .timeline {
+            margin-left: 30px;
+            padding-left: 25px;
+        }
+
+        .timeline-icon {
+            width: 40px;
+            height: 40px;
+            font-size: 18px;
+            left: -50px;
+        }
+
+        .banner-title {
+            font-size: 1.8rem;
+        }
+
+        .gear-icon {
+            font-size: 200px;
+        }
+
+        .cta-section h3 {
+            font-size: 2rem;
+        }
+
+        .garages-section {
+            padding: 40px 20px;
+        }
+
+        .contact-section {
+            padding: 50px 25px;
+        }
+
+        .about-section {
+            padding: 50px 25px;
+        }
+
+        .about-section h2 {
+            font-size: 2rem;
+        }
+
+        .about-metrics {
+            gap: 15px;
+        }
+
+        .about-metric {
+            padding: 20px;
+        }
+
+        .platform-section {
+            padding: 60px 25px;
+        }
+    }
+
+    /* Smooth Scroll */
+    html {
+        scroll-behavior: smooth;
+    }
+</style>
+
 <!-- Hero Section -->
-<div class="hero-section bg-primary text-white text-center py-5 mb-5 rounded">
-    <div class="container">
-        <h1 class="display-4 fw-bold mb-3">
-            <i class="bi bi-wrench-adjustable-circle"></i> Welcome to Car Service System
-        </h1>
-        <p class="lead mb-4">Book your car service appointments easily and manage your vehicle maintenance</p>
-        {% if not user.is_authenticated %}
-        <div class="d-flex gap-3 justify-content-center flex-wrap">
-            <a href="{% url 'accounts:signup' %}" class="btn btn-light btn-lg">
-                <i class="bi bi-person-plus"></i> Get Started
-            </a>
-            <a href="{% url 'accounts:user_login' %}" class="btn btn-outline-light btn-lg">
-                <i class="bi bi-box-arrow-in-right"></i> Login
-            </a>
+<div class="hero-section text-white">
+    <div id="heroCarousel" class="carousel slide hero-carousel" data-bs-ride="carousel" data-bs-interval="5000">
+        <div class="carousel-indicators">
+            <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+            <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+            <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
         </div>
-        {% else %}
-        <div class="d-flex gap-3 justify-content-center flex-wrap">
-            {% if user.role == 'customer' %}
-            <a href="{% url 'customers:dashboard' %}" class="btn btn-light btn-lg">
-                <i class="bi bi-speedometer2"></i> Go to Dashboard
-            </a>
-            <a href="{% url 'customers:search_garages' %}" class="btn btn-outline-light btn-lg">
-                <i class="bi bi-search"></i> Search Garages
-            </a>
-            {% elif user.role == 'garage' %}
-            <a href="{% url 'garage_dashboard' %}" class="btn btn-light btn-lg">
-                <i class="bi bi-speedometer2"></i> Go to Dashboard
-            </a>
-            <a href="{% url 'garage_profile' %}" class="btn btn-outline-light btn-lg">
-                <i class="bi bi-person-circle"></i> Manage Profile
-            </a>
-            {% endif %}
+
+        <div class="carousel-inner">
+            <!-- Slide 1 -->
+            <div class="carousel-item active" style="background-image: url('{% static 'images/login_back.png' %}');">
+                <div class="hero-overlay"></div>
+                <div class="hero-caption">
+                    <div class="container hero-content">
+                        <h1><i class="bi bi-wrench-adjustable-circle"></i> Welcome to Car Care Hub</h1>
+                        <p class="lead">Book your car service appointments easily and manage your vehicle maintenance with our modern platform</p>
+                        {% if not user.is_authenticated %}
+                        <div class="hero-buttons d-flex gap-3 justify-content-center flex-wrap">
+                            <a href="{% url 'accounts:signup' %}" class="btn btn-light btn-lg">
+                                <i class="bi bi-person-plus"></i> Get Started
+                            </a>
+                            <a href="{% url 'accounts:user_login' %}" class="btn btn-outline-light btn-lg">
+                                <i class="bi bi-box-arrow-in-right"></i> Login
+                            </a>
+                        </div>
+                        {% else %}
+                        <div class="hero-buttons d-flex gap-3 justify-content-center flex-wrap">
+                            {% if user.role == 'customer' %}
+                            <a href="{% url 'customers:dashboard' %}" class="btn btn-light btn-lg">
+                                <i class="bi bi-speedometer2"></i> Go to Dashboard
+                            </a>
+                            <a href="{% url 'customers:search_garages' %}" class="btn btn-outline-light btn-lg">
+                                <i class="bi bi-search"></i> Search Garages
+                            </a>
+                            {% elif user.role == 'garage' %}
+                            <a href="{% url 'garage_dashboard' %}" class="btn btn-light btn-lg">
+                                <i class="bi bi-speedometer2"></i> Go to Dashboard
+                            </a>
+                            <a href="{% url 'garage_profile' %}" class="btn btn-outline-light btn-lg">
+                                <i class="bi bi-person-circle"></i> Manage Profile
+                            </a>
+                            {% endif %}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 2 -->
+            <div class="carousel-item" style="background-image: url('{% static 'images/car_mech.webp' %}');">
+                <div class="hero-overlay"></div>
+                <div class="hero-caption">
+                    <div class="container hero-content">
+                        <h1><i class="bi bi-gear-wide-connected"></i> Expert Mechanics, Trusted Service</h1>
+                        <p class="lead">Certified garages, transparent pricing, and end‑to‑end service you can rely on</p>
+                        <div class="hero-buttons d-flex gap-3 justify-content-center flex-wrap">
+                            <a href="{% url 'customers:search_garages' %}" class="btn btn-light btn-lg">
+                                <i class="bi bi-search"></i> Find a Garage
+                            </a>
+                            <a href="{% url 'accounts:signup' %}" class="btn btn-outline-light btn-lg">
+                                <i class="bi bi-person-plus"></i> Join Now
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 3 -->
+            <div class="carousel-item" style="background-image: url('{% static 'images/car.png' %}');">
+                <div class="hero-overlay"></div>
+                <div class="hero-caption">
+                    <div class="container hero-content">
+                        <h1><i class="bi bi-truck"></i> Pickup, Service, and Safe Drop</h1>
+                        <p class="lead">We handle the rest while you sit back—track everything in real time</p>
+                        <div class="hero-buttons d-flex gap-3 justify-content-center flex-wrap">
+                            <a href="{% url 'accounts:user_login' %}" class="btn btn-light btn-lg">
+                                <i class="bi bi-box-arrow-in-right"></i> Track Your Booking
+                            </a>
+                            <a href="#how-it-works" class="btn btn-outline-light btn-lg">
+                                <i class="bi bi-play-circle"></i> See How It Works
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        {% endif %}
+
+        <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev" aria-label="Previous">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next" aria-label="Next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
     </div>
 </div>
 
 <!-- Features Section -->
-<div class="row g-4 mb-5">
-    <div class="col-md-4">
-        <div class="card h-100 shadow-sm">
-            <div class="card-body text-center">
-                <div class="mb-3">
-                    <i class="bi bi-search-heart display-4 text-primary"></i>
+<div class="features-section">
+    <div class="container">
+        <h2 class="section-title">Why Choose Car Care Hub?</h2>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="bi bi-search-heart"></i>
+                    </div>
+                    <h5>Find Garages</h5>
+                    <p>Search for nearby garages and service centers based on your location. Compare services, prices, and ratings to find the perfect match for your vehicle.</p>
                 </div>
-                <h5 class="card-title">Find Garages</h5>
-                <p class="card-text">Search for nearby garages and service centers based on your location. Compare
-                    services and prices.</p>
             </div>
-        </div>
-    </div>
-    <div class="col-md-4">
-        <div class="card h-100 shadow-sm">
-            <div class="card-body text-center">
-                <div class="mb-3">
-                    <i class="bi bi-calendar-check display-4 text-success"></i>
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="bi bi-calendar-check"></i>
+                    </div>
+                    <h5>Book Services</h5>
+                    <p>Easily book car service appointments online. Choose your preferred date and time slot that fits your schedule perfectly.</p>
                 </div>
-                <h5 class="card-title">Book Services</h5>
-                <p class="card-text">Easily book car service appointments online. Choose your preferred date and time.
-                </p>
             </div>
-        </div>
-    </div>
-    <div class="col-md-4">
-        <div class="card h-100 shadow-sm">
-            <div class="card-body text-center">
-                <div class="mb-3">
-                    <i class="bi bi-clipboard-check display-4 text-info"></i>
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="bi bi-clipboard-check"></i>
+                    </div>
+                    <h5>Track Bookings</h5>
+                    <p>Manage all your bookings in one place. Track service status in real-time and access your complete service history.</p>
                 </div>
-                <h5 class="card-title">Track Bookings</h5>
-                <p class="card-text">Manage all your bookings in one place. Track service status and history.</p>
             </div>
         </div>
     </div>
 </div>
 
 <!-- How It Works Section -->
-<!-- <div class="row mb-5">
-    <div class="col-12">
-        <h2 class="text-center mb-4">How It Works</h2>
-        <div class="row g-4">
-            <div class="col-md-3 text-center">
-                <div class="step-number bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3"
-                    style="width: 60px; height: 60px; font-size: 24px; font-weight: bold;">1</div>
-                <h5>Sign Up</h5>
-                <p>Create your account as a customer or garage owner</p>
+<section class="how-it-works">
+    <div class="container">
+        <h2 class="text-center fw-bold mb-5">How It Works?</h2>
+        <div class="timeline">
+            <!-- Step 1 -->
+            <div class="timeline-item">
+                <div class="timeline-icon">1</div>
+                <div class="timeline-content">
+                    <h5>Car Pick-up</h5>
+                    <p>Your car will be picked from your location by our trusted service partners.</p>
+                    <img src="{% static 'images/car-pick-up.svg' %}" alt="Car Pickup" class="img-fluid step-img" onerror="this.style.display='none'">
+                </div>
             </div>
-            <div class="col-md-3 text-center">
-                <div class="step-number bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3"
-                    style="width: 60px; height: 60px; font-size: 24px; font-weight: bold;">2</div>
-                <h5>Add Vehicle</h5>
-                <p>Register your vehicle details (for customers)</p>
+
+            <!-- Step 2 -->
+            <div class="timeline-item">
+                <div class="timeline-icon">2</div>
+                <div class="timeline-content">
+                    <h5>Car Service</h5>
+                    <p>Your car will be serviced by trained and certified car mechanics using quality parts.</p>
+                    <img src="{% static 'images/car-service.svg' %}" alt="Car Service" class="img-fluid step-img" onerror="this.style.display='none'">
+                </div>
             </div>
-            <div class="col-md-3 text-center">
-                <div class="step-number bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3"
-                    style="width: 60px; height: 60px; font-size: 24px; font-weight: bold;">3</div>
-                <h5>Search & Book</h5>
-                <p>Find garages and book your service appointment</p>
-            </div>
-            <div class="col-md-3 text-center">
-                <div class="step-number bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3"
-                    style="width: 60px; height: 60px; font-size: 24px; font-weight: bold;">4</div>
-                <h5>Get Service</h5>
-                <p>Visit the garage and get your vehicle serviced</p>
+
+            <!-- Step 3 -->
+            <div class="timeline-item">
+                <div class="timeline-icon">3</div>
+                <div class="timeline-content">
+                    <h5>Car Drop</h5>
+                    <p>Your car will be safely dropped back at your location after service completion.</p>
+                    <img src="{% static 'images/car-drop.svg' %}" alt="Car Drop" class="img-fluid step-img" onerror="this.style.display='none'">
+                </div>
             </div>
         </div>
     </div>
-</div> -->
-<!-- How It Works Section -->
-<section class="how-it-works py-5">
-  <div class="container">
-    <h2 class="fw-bold mb-5 text-center text-primary">How it Works?</h2>
-
-    <div class="timeline">
-      <!-- Step 1 -->
-      <div class="timeline-item">
-        <div class="timeline-icon">1</div>
-        <div class="timeline-content">
-          <h5 class="fw-bold">Car Pick-up</h5>
-          <p>Your car will be picked from your location.</p>
-          <img src="{% static 'images/car-pick-up.svg' %}" alt="Car Pickup" class="img-fluid step-img">
-        </div>
-      </div>
-
-      <!-- Step 2 -->
-      <div class="timeline-item">
-        <div class="timeline-icon">2</div>
-        <div class="timeline-content">
-          <h5 class="fw-bold">Car Service</h5>
-          <p>Your car will be serviced by trained car mechanics.</p>
-          <img src="{% static 'images/car-service.svg' %}" alt="Car Service" class="img-fluid step-img">
-        </div>
-      </div>
-
-      <!-- Step 3 -->
-      <div class="timeline-item">
-        <div class="timeline-icon">3</div>
-        <div class="timeline-content">
-          <h5 class="fw-bold">Car Drop</h5>
-          <p>Your car will be dropped at your location.</p>
-          <img src="{% static 'images/car-drop.svg' %}" alt="Car Drop" class="img-fluid step-img">
-        </div>
-      </div>
-    </div>
-  </div>
 </section>
 
-
 <!-- Services Section -->
-<div class="row mb-5">
-    <div class="col-12">
-        <h2 class="text-center mb-4">Our Services</h2>
-        <div class="row g-3">
-            <div class="col-md-6 col-lg-3">
-                <div class="card border-primary">
-                    <div class="card-body text-center">
-                        <i class="bi bi-droplet display-6 text-primary mb-2"></i>
-                        <h6 class="card-title">Oil Change</h6>
-                    </div>
+<div class="services-section">
+    <div class="container">
+        <h2 class="section-title">Our Services</h2>
+        <p class="services-subtitle">End‑to‑end care for every make and model, delivered with transparency.</p>
+        <div class="row g-4">
+            <div class="col-md-6 col-lg-4">
+                <div class="service-card">
+                    <span class="service-icon"><i class="bi bi-droplet"></i></span>
+                    <h6>Oil & Filter Change</h6>
+                    <p class="service-desc">High‑quality oils and OEM filters for longer engine life.</p>
+                    <ul class="service-list">
+                        <li><i class="bi bi-check-circle-fill"></i> Synthetic & mineral options</li>
+                        <li><i class="bi bi-check-circle-fill"></i> 15‑point health check</li>
+                    </ul>
+                    <span class="service-badge"><i class="bi bi-clock"></i> 60–90 mins</span>
                 </div>
             </div>
-            <div class="col-md-6 col-lg-3">
-                <div class="card border-success">
-                    <div class="card-body text-center">
-                        <i class="bi bi-circle-square display-6 text-success mb-2"></i>
-                        <h6 class="card-title">Brake Repair</h6>
-                    </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="service-card">
+                    <span class="service-icon"><i class="bi bi-stoplights"></i></span>
+                    <h6>Brake Service</h6>
+                    <p class="service-desc">Precision brake inspection, pad/rotor replacement and bleeding.</p>
+                    <ul class="service-list">
+                        <li><i class="bi bi-check-circle-fill"></i> OEM/Aftermarket pads</li>
+                        <li><i class="bi bi-check-circle-fill"></i> Disc resurfacing</li>
+                    </ul>
+                    <span class="service-badge"><i class="bi bi-shield-check"></i> Safety first</span>
                 </div>
             </div>
-            <div class="col-md-6 col-lg-3">
-                <div class="card border-info">
-                    <div class="card-body text-center">
-                        <i class="bi bi-gear display-6 text-info mb-2"></i>
-                        <h6 class="card-title">Engine Service</h6>
-                    </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="service-card">
+                    <span class="service-icon"><i class="bi bi-gear"></i></span>
+                    <h6>Engine Diagnostics</h6>
+                    <p class="service-desc">OBD scanning and expert troubleshooting for performance issues.</p>
+                    <ul class="service-list">
+                        <li><i class="bi bi-check-circle-fill"></i> Check‑engine light scan</li>
+                        <li><i class="bi bi-check-circle-fill"></i> Detailed report</li>
+                    </ul>
+                    <span class="service-badge"><i class="bi bi-cpu"></i> OBD‑II</span>
                 </div>
             </div>
-            <div class="col-md-6 col-lg-3">
-                <div class="card border-warning">
-                    <div class="card-body text-center">
-                        <i class="bi bi-tools display-6 text-warning mb-2"></i>
-                        <h6 class="card-title">General Repair</h6>
-                    </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="service-card">
+                    <span class="service-icon"><i class="bi bi-tools"></i></span>
+                    <h6>General Repair</h6>
+                    <p class="service-desc">Suspension, steering, transmission and electrical fixes.</p>
+                    <ul class="service-list">
+                        <li><i class="bi bi-check-circle-fill"></i> Genuine parts</li>
+                        <li><i class="bi bi-check-circle-fill"></i> Warranty backed</li>
+                    </ul>
+                    <span class="service-badge"><i class="bi bi-wrench"></i> Skilled techs</span>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="service-card">
+                    <span class="service-icon"><i class="bi bi-battery-charging"></i></span>
+                    <h6>Battery Replacement</h6>
+                    <p class="service-desc">Quick testing and replacement with doorstep assistance.</p>
+                    <ul class="service-list">
+                        <li><i class="bi bi-check-circle-fill"></i> Branded batteries</li>
+                        <li><i class="bi bi-check-circle-fill"></i> Old core disposal</li>
+                    </ul>
+                    <span class="service-badge"><i class="bi bi-lightning-charge"></i> On‑site</span>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="service-card">
+                    <span class="service-icon"><i class="bi bi-snow"></i></span>
+                    <h6>AC Service</h6>
+                    <p class="service-desc">Cooling performance restoration with leak check and refilling.</p>
+                    <ul class="service-list">
+                        <li><i class="bi bi-check-circle-fill"></i> Gas top‑up</li>
+                        <li><i class="bi bi-check-circle-fill"></i> Cabin filter change</li>
+                    </ul>
+                    <span class="service-badge"><i class="bi bi-thermometer-snow"></i> Chill‑ready</span>
                 </div>
             </div>
         </div>
     </div>
 </div>
-{% if not user.is_authenticated %}
-<!-- For Garages Section -->
-<section class="garages-section py-5">
-  <div class="container">
-    <div class="row align-items-center g-5">
 
-      <!-- Left side: Text Content -->
-      <div class="col-lg-6">
-        <h2 class="fw-bold text-primary mb-3">For Garages & Service Centers</h2>
-        <div class="underline mb-3"></div>
-        <p class="text-muted mb-4">
-          Join Car Care Hub and take your business online!  
-          Register your garage, manage bookings, connect with customers, and grow your reach effortlessly.  
-          Our platform helps you showcase your services, pricing, and ratings all in one place.
+<!-- About Section -->
+<section class="about-section" id="about">
+    <div class="container">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-6 about-content">
+                <span class="about-highlight">
+                    <i class="bi bi-people"></i> About Car Care Hub
+                </span>
+                <h2>Empowering car owners and garages with effortless service experiences.</h2>
+                <p>Car Care Hub bridges the gap between vehicle owners and trusted garages. From seamless bookings to transparent service updates, we make automotive care simple, reliable, and digital-first.</p>
+                <p>We partner with verified garages, certified mechanics, and a dedicated support team to ensure every service meets the highest standards of quality and convenience.</p>
+
+                <div class="about-badges">
+                    <div class="about-badge">
+                        <i class="bi bi-shield-check text-primary fs-4"></i> Verified Workshops
+                    </div>
+                    <div class="about-badge">
+                        <i class="bi bi-clock-history text-success fs-4"></i> 24/7 Support
+                    </div>
+                    <div class="about-badge">
+                        <i class="bi bi-geo-alt text-danger fs-4"></i> Pickup & Drop
+                    </div>
+                </div>
+
+                <div class="about-metrics">
+                    <div class="about-metric">
+                        <h3>10K+</h3>
+                        <span>Vehicles serviced</span>
+                    </div>
+                    <div class="about-metric">
+                        <h3>500+</h3>
+                        <span>Garage partners</span>
+                    </div>
+                    <div class="about-metric">
+                        <h3>4.8★</h3>
+                        <span>Average customer rating</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6 about-image">
+                <img src="{% static 'images/workshop_logo.png' %}" alt="Car Care Hub" onerror="this.style.display='none'">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Platform Section -->
+<section class="platform-section">
+    <div class="container position-relative">
+        <h2 class="section-title text-white">Built For Connected Car Care</h2>
+        <p class="platform-subtitle">
+            Car Care Hub isn’t just a booking form—it’s a connected ecosystem that blends technology, real‑world expertise,
+            and customer transparency to keep every journey smooth.
         </p>
 
-        <ul class="list-unstyled mb-4">
-          <li class="mb-2">
-            <i class="bi bi-check-circle-fill text-success me-2"></i>
-            Create your online garage profile
-          </li>
-          <li class="mb-2">
-            <i class="bi bi-check-circle-fill text-success me-2"></i>
-            Accept and manage bookings easily
-          </li>
-          <li class="mb-2">
-            <i class="bi bi-check-circle-fill text-success me-2"></i>
-            Track customer feedback and ratings
-          </li>
-          <li>
-            <i class="bi bi-check-circle-fill text-success me-2"></i>
-            Boost visibility and attract new customers
-          </li>
-        </ul>
-
-        <div class="d-flex gap-3 flex-wrap">
-          <a href="{% url 'accounts:signup' %}" class="btn btn-primary btn-lg">
-            <i class="bi bi-building-add"></i> Register Your Garage
-          </a>
-          <a href="{% url 'accounts:user_login' %}" class="btn btn-outline-primary btn-lg">
-            <i class="bi bi-person-gear"></i> Manage Dashboard
-          </a>
+        <div class="row g-4">
+            <div class="col-lg-4">
+                <div class="platform-card">
+                    <div class="platform-icon"><i class="bi bi-wifi"></i></div>
+                    <h4>Real-Time Tracking</h4>
+                    <p>Follow every service milestone with instant notifications, live status updates, and actionable insights in your dashboard.</p>
+                    <div class="platform-meta"><i class="bi bi-lightning-charge"></i> Live updates every stage</div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="platform-card">
+                    <div class="platform-icon"><i class="bi bi-hand-thumbs-up"></i></div>
+                    <h4>Trust at Scale</h4>
+                    <p>Verified garages, technician certifications, and transparent pricing give peace of mind before the engine even starts.</p>
+                    <div class="platform-meta"><i class="bi bi-shield-check"></i> Vetted partners network</div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="platform-card">
+                    <div class="platform-icon"><i class="bi bi-phone"></i></div>
+                    <h4>Digital Convenience</h4>
+                    <p>Reschedule, approve quotes, or chat with service advisors from any device. The garage front desk now fits in your pocket.</p>
+                    <div class="platform-meta"><i class="bi bi-cloud-arrow-down"></i> Mobile-first experience</div>
+                </div>
+            </div>
         </div>
-      </div>
 
-      <!-- Right side: Illustration or Image -->
-      <div class="col-lg-6 text-center">
-        <img src="{% static 'images/dash.png' %}" alt="Garage Management" class="img-fluid garage-image">
-      </div>
-
+        <div class="platform-cta">
+            <a href="{% url 'accounts:signup' %}" class="btn btn-lg">
+                Explore The Platform
+            </a>
+        </div>
     </div>
-  </div>
+</section>
+
+<!-- Contact Us Section -->
+<section class="contact-section" id="contact">
+    <div class="container">
+        <h2 class="section-title">Contact Us</h2>
+        <div class="row g-4">
+            <!-- Contact Form -->
+            <div class="col-lg-7">
+                <div class="contact-card">
+                    <div class="mb-3">
+                        <span class="contact-badge"><i class="bi bi-envelope-paper"></i> Get in touch</span>
+                    </div>
+                    <form id="contactForm" novalidate>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label" for="contactName">Full Name</label>
+                                <input type="text" id="contactName" class="form-control" placeholder="John Doe" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label" for="contactEmail">Email</label>
+                                <input type="email" id="contactEmail" class="form-control" placeholder="you@example.com" required>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label" for="contactSubject">Subject</label>
+                                <input type="text" id="contactSubject" class="form-control" placeholder="How can we help?" required>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label" for="contactMessage">Message</label>
+                                <textarea id="contactMessage" class="form-control" rows="5" placeholder="Write your message..." required></textarea>
+                            </div>
+                            <div class="col-12 d-grid d-sm-flex gap-2">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="bi bi-send"></i> Send Message
+                                </button>
+                                <a href="mailto:support@carcarehub.example" class="btn btn-outline-primary">
+                                    <i class="bi bi-envelope"></i> Email Us
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Contact Details -->
+            <div class="col-lg-5">
+                <div class="contact-card h-100">
+                    <div class="mb-3">
+                        <span class="contact-badge"><i class="bi bi-geo-alt"></i> Reach us</span>
+                    </div>
+                    <div class="contact-info">
+                        <div class="contact-icon"><i class="bi bi-geo"></i></div>
+                        <div>
+                            <strong>Head Office</strong>
+                            <div class="text-muted">123 Service Lane, Auto Park, Pune 411001</div>
+                        </div>
+                    </div>
+                    <div class="contact-info">
+                        <div class="contact-icon"><i class="bi bi-telephone"></i></div>
+                        <div>
+                            <strong>Phone</strong>
+                            <div class="text-muted">+91 98765 43210</div>
+                        </div>
+                    </div>
+                    <div class="contact-info">
+                        <div class="contact-icon"><i class="bi bi-envelope-open"></i></div>
+                        <div>
+                            <strong>Email</strong>
+                            <div class="text-muted">support@carcarehub.example</div>
+                        </div>
+                    </div>
+                    <div class="contact-info">
+                        <div class="contact-icon"><i class="bi bi-clock-history"></i></div>
+                        <div>
+                            <strong>Hours</strong>
+                            <div class="text-muted">Mon–Sat: 9:00 AM – 7:00 PM</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% if not user.is_authenticated %}
+<!-- For Garages Section -->
+<section class="garages-section">
+    <div class="container">
+        <div class="row align-items-center g-5">
+            <!-- Left side: Text Content -->
+            <div class="col-lg-6">
+                <h2 class="fw-bold mb-3">For Garages & Service Centers</h2>
+                <div class="underline"></div>
+                <p class="text-muted mb-4">
+                    Join Car Care Hub and take your business online! Register your garage, manage bookings, connect with customers, and grow your reach effortlessly. Our platform helps you showcase your services, pricing, and ratings all in one place.
+                </p>
+
+                <ul class="list-unstyled mb-4">
+                    <li class="mb-3">
+                        <i class="bi bi-check-circle-fill text-success me-2" style="font-size: 1.2rem;"></i>
+                        <strong>Create your online garage profile</strong>
+                    </li>
+                    <li class="mb-3">
+                        <i class="bi bi-check-circle-fill text-success me-2" style="font-size: 1.2rem;"></i>
+                        <strong>Accept and manage bookings easily</strong>
+                    </li>
+                    <li class="mb-3">
+                        <i class="bi bi-check-circle-fill text-success me-2" style="font-size: 1.2rem;"></i>
+                        <strong>Track customer feedback and ratings</strong>
+                    </li>
+                    <li>
+                        <i class="bi bi-check-circle-fill text-success me-2" style="font-size: 1.2rem;"></i>
+                        <strong>Boost visibility and attract new customers</strong>
+                    </li>
+                </ul>
+
+                <div class="d-flex gap-3 flex-wrap">
+                    <a href="{% url 'accounts:signup' %}" class="btn btn-primary btn-lg">
+                        <i class="bi bi-building-add"></i> Register Your Garage
+                    </a>
+                    <a href="{% url 'accounts:user_login' %}" class="btn btn-outline-primary btn-lg">
+                        <i class="bi bi-person-gear"></i> Manage Dashboard
+                    </a>
+                </div>
+            </div>
+
+            <!-- Right side: Illustration or Image -->
+            <div class="col-lg-6 text-center">
+                <img src="{% static 'images/dash.png' %}" alt="Garage Management" class="img-fluid garage-image" onerror="this.style.display='none'">
+            </div>
+        </div>
+    </div>
 </section>
 {% endif %}
 
 <!-- Banner Section -->
 <section class="banner">
-    <!-- Decorative Gear Icon -->
     <div class="gear-icon">⚙️</div>
-
     <div class="container">
-      <div class="row align-items-center">
-        <!-- Car Image -->
-        <div class="col-lg-6 text-center text-lg-start">
-          <img src="{% static 'images/car2.png' %}" 
-               alt="Car" 
-               class="car-img img-fluid rounded shadow">
-        </div>
+        <div class="row align-items-center">
+            <!-- Car Image -->
+            <div class="col-lg-6 text-center text-lg-start">
+                <img src="{% static 'images/car2.png' %}" alt="Car" class="car-img img-fluid rounded shadow" onerror="this.style.display='none'">
+            </div>
 
-        <!-- Text & Logos -->
-        <div class="col-lg-6 banner-text">
-          <h1 class="banner-title">
-            We Serve all makes & <span>Models</span>
-          </h1>
-          <p class="banner-subtitle">
-            All luxurious, semi luxurious brands are trustfully serviced under one roof.
-          </p>
+            <!-- Text & Logos -->
+            <div class="col-lg-6 banner-text">
+                <h1 class="banner-title">
+                    We Serve all makes & <span>Models</span>
+                </h1>
+                <p class="banner-subtitle">
+                    All luxurious, semi luxurious brands are trustfully serviced under one roof.
+                </p>
 
-          <!-- Brand Logos -->
-          <div class="brand-logos">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/4/44/BMW.svg" alt="BMW">
-            <img src="{% static 'images/audi.png' %}" alt="Audi">
-            <img src="{% static 'images/bajaj.png' %}" alt="Bajaj">
-            <img src="{% static 'images/fiat.png' %}" alt="Fiat">
-            <img src="{% static 'images/toyota.png' %}" alt="Toyota">
-            <img src="{% static 'images/mahindra.png' %}" alt="Mahindra">
-            <img src="{% static 'images/lambo.png' %}" alt="Lamborghini">
-            <img src="{% static 'images/suzuki.png' %}" alt="Suzuki">
-            <img src="{% static 'images/honda.png' %}" alt="Honda">
-            <img src="{% static 'images/hundai.png' %}" alt="Hyundai">
-            <img src="{% static 'images/nissan.png' %}" alt="Nissan">
-            <img src="{% static 'images/tata.png' %}" alt="Tata">
-            <img src="{% static 'images/ford.png' %}" alt="Ford">
-            <img src="{% static 'images/volkswaagan.png' %}" alt="Volkswagen">
-          </div>
+                <!-- Brand Logos -->
+                <div class="brand-logos">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/4/44/BMW.svg" alt="BMW" onerror="this.style.display='none'">
+                    <img src="{% static 'images/audi.png' %}" alt="Audi" onerror="this.style.display='none'">
+                    <img src="{% static 'images/bajaj.png' %}" alt="Bajaj" onerror="this.style.display='none'">
+                    <img src="{% static 'images/fiat.png' %}" alt="Fiat" onerror="this.style.display='none'">
+                    <img src="{% static 'images/toyota.png' %}" alt="Toyota" onerror="this.style.display='none'">
+                    <img src="{% static 'images/mahindra.png' %}" alt="Mahindra" onerror="this.style.display='none'">
+                    <img src="{% static 'images/lambo.png' %}" alt="Lamborghini" onerror="this.style.display='none'">
+                    <img src="{% static 'images/suzuki.png' %}" alt="Suzuki" onerror="this.style.display='none'">
+                    <img src="{% static 'images/honda.png' %}" alt="Honda" onerror="this.style.display='none'">
+                    <img src="{% static 'images/hundai.png' %}" alt="Hyundai" onerror="this.style.display='none'">
+                    <img src="{% static 'images/nissan.png' %}" alt="Nissan" onerror="this.style.display='none'">
+                    <img src="{% static 'images/tata.png' %}" alt="Tata" onerror="this.style.display='none'">
+                    <img src="{% static 'images/ford.png' %}" alt="Ford" onerror="this.style.display='none'">
+                    <img src="{% static 'images/volkswaagan.png' %}" alt="Volkswagen" onerror="this.style.display='none'">
+                </div>
+            </div>
         </div>
-      </div>
-  </section>
+    </div>
+</section>
+
 <!-- Customer Testimonials Section -->
-<div class="row mb-5">
-    <div class="col-12">
-        <h2 class="text-center mb-4">What Our Customers Say</h2>
-        <div class="row g-4">
+<div class="testimonials-section">
+    <div class="container">
+        <h2 class="section-title">What Our Customers Say</h2>
 
-            <!-- Testimonial 1 -->
-            <div class="col-md-6 col-lg-3">
-                <div class="card shadow-sm h-100 border-0">
-                    <div class="card-body text-center">
-                        <i class="bi bi-chat-quote text-primary display-6 mb-3"></i>
-                        <p class="card-text fst-italic">
-                            "Amazing service! The garage arrived on time and fixed my car quickly. Highly recommended!"
-                        </p>
-                        <h6 class="fw-bold mt-3 mb-0">Amit Sharma</h6>
-                        <small class="text-muted">Customer from Pune</small>
+        <div id="customerTestimonialsCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="6000">
+            <div class="carousel-indicators">
+                <button type="button" data-bs-target="#customerTestimonialsCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                <button type="button" data-bs-target="#customerTestimonialsCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+            </div>
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <div class="row g-4 justify-content-center">
+                        <div class="col-md-6 col-lg-6">
+                            <div class="testimonial-card">
+                                <i class="bi bi-chat-quote text-primary testimonial-icon"></i>
+                                <p class="testimonial-text">
+                                    "Amazing service! The garage arrived on time and fixed my car quickly. Highly recommended!"
+                                </p>
+                                <h6 class="testimonial-author">Amit Sharma</h6>
+                                <small class="testimonial-location">Customer from Pune</small>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-6">
+                            <div class="testimonial-card">
+                                <i class="bi bi-chat-quote text-success testimonial-icon"></i>
+                                <p class="testimonial-text">
+                                    "Booking was super easy and transparent. I could track everything online!"
+                                </p>
+                                <h6 class="testimonial-author">Priya Patel</h6>
+                                <small class="testimonial-location">Customer from Mumbai</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <div class="row g-4 justify-content-center">
+                        <div class="col-md-6 col-lg-6">
+                            <div class="testimonial-card">
+                                <i class="bi bi-chat-quote text-info testimonial-icon"></i>
+                                <p class="testimonial-text">
+                                    "The staff were friendly and explained everything clearly. My car feels brand new!"
+                                </p>
+                                <h6 class="testimonial-author">Rahul Mehta</h6>
+                                <small class="testimonial-location">Customer from Delhi</small>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-6">
+                            <div class="testimonial-card">
+                                <i class="bi bi-chat-quote text-warning testimonial-icon"></i>
+                                <p class="testimonial-text">
+                                    "Best platform for finding trusted garages nearby. Saved me so much time!"
+                                </p>
+                                <h6 class="testimonial-author">Sneha Rao</h6>
+                                <small class="testimonial-location">Customer from Hyderabad</small>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-
-            <!-- Testimonial 2 -->
-            <div class="col-md-6 col-lg-3">
-                <div class="card shadow-sm h-100 border-0">
-                    <div class="card-body text-center">
-                        <i class="bi bi-chat-quote text-success display-6 mb-3"></i>
-                        <p class="card-text fst-italic">
-                            "Booking was super easy and transparent. I could track everything online!"
-                        </p>
-                        <h6 class="fw-bold mt-3 mb-0">Priya Patel</h6>
-                        <small class="text-muted">Customer from Mumbai</small>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Testimonial 3 -->
-            <div class="col-md-6 col-lg-3">
-                <div class="card shadow-sm h-100 border-0">
-                    <div class="card-body text-center">
-                        <i class="bi bi-chat-quote text-info display-6 mb-3"></i>
-                        <p class="card-text fst-italic">
-                            "The staff were friendly and explained everything clearly. My car feels brand new!"
-                        </p>
-                        <h6 class="fw-bold mt-3 mb-0">Rahul Mehta</h6>
-                        <small class="text-muted">Customer from Delhi</small>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Testimonial 4 -->
-            <div class="col-md-6 col-lg-3">
-                <div class="card shadow-sm h-100 border-0">
-                    <div class="card-body text-center">
-                        <i class="bi bi-chat-quote text-warning display-6 mb-3"></i>
-                        <p class="card-text fst-italic">
-                            "Best platform for finding trusted garages nearby. Saved me so much time!"
-                        </p>
-                        <h6 class="fw-bold mt-3 mb-0">Sneha Rao</h6>
-                        <small class="text-muted">Customer from Hyderabad</small>
-                    </div>
-                </div>
-            </div>
-
+            <button class="carousel-control-prev" type="button" data-bs-target="#customerTestimonialsCarousel" data-bs-slide="prev" aria-label="Previous">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#customerTestimonialsCarousel" data-bs-slide="next" aria-label="Next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
         </div>
     </div>
 </div>
 
+<!-- Garage Owners Testimonials Section -->
+<div class="testimonials-section">
+    <div class="container">
+        <h2 class="section-title">What Our Garage Owners Say</h2>
+
+        <div id="ownerTestimonialsCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="6000">
+            <div class="carousel-indicators">
+                <button type="button" data-bs-target="#ownerTestimonialsCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                <button type="button" data-bs-target="#ownerTestimonialsCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+            </div>
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <div class="row g-4 justify-content-center">
+                        <div class="col-md-6 col-lg-6">
+                            <div class="testimonial-card">
+                                <i class="bi bi-megaphone text-primary testimonial-icon"></i>
+                                <p class="testimonial-text">
+                                    "Car Care Hub helped us get consistent bookings and manage schedules with ease."
+                                </p>
+                                <h6 class="testimonial-author">Rakesh Verma</h6>
+                                <small class="testimonial-location">Owner, Verma Auto Care</small>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-6">
+                            <div class="testimonial-card">
+                                <i class="bi bi-megaphone text-success testimonial-icon"></i>
+                                <p class="testimonial-text">
+                                    "Our visibility improved and new customers discovered our garage online."
+                                </p>
+                                <h6 class="testimonial-author">Meera Kulkarni</h6>
+                                <small class="testimonial-location">Owner, MK Motors</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <div class="row g-4 justify-content-center">
+                        <div class="col-md-6 col-lg-6">
+                            <div class="testimonial-card">
+                                <i class="bi bi-megaphone text-info testimonial-icon"></i>
+                                <p class="testimonial-text">
+                                    "Payments and feedback are streamlined—managing the business is simpler now."
+                                </p>
+                                <h6 class="testimonial-author">Farhan Ali</h6>
+                                <small class="testimonial-location">Owner, FA Service Center</small>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-6">
+                            <div class="testimonial-card">
+                                <i class="bi bi-megaphone text-warning testimonial-icon"></i>
+                                <p class="testimonial-text">
+                                    "The dashboard tools are excellent. We track bookings and reviews effortlessly."
+                                </p>
+                                <h6 class="testimonial-author">Anita Desai</h6>
+                                <small class="testimonial-location">Owner, Desai AutoWorks</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#ownerTestimonialsCarousel" data-bs-slide="prev" aria-label="Previous">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#ownerTestimonialsCarousel" data-bs-slide="next" aria-label="Next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+    </div>
+</div>
 
 <!-- Call to Action -->
 {% if not user.is_authenticated %}
-<div class="row">
-    <div class="col-12">
-        <div class="card bg-light border-0">
-            <div class="card-body text-center py-5">
-                <h3 class="mb-3">Ready to Get Started?</h3>
-                <p class="lead mb-4">Join thousands of satisfied customers and garage owners</p>
-                <a href="{% url 'accounts:signup' %}" class="btn btn-primary btn-lg me-2">
-                    <i class="bi bi-person-plus"></i> Sign Up Now
-                </a>
-                <a href="{% url 'accounts:user_login' %}" class="btn btn-outline-primary btn-lg">
-                    <i class="bi bi-box-arrow-in-right"></i> Login
-                </a>
-            </div>
-        </div>
+<div class="cta-section">
+    <div class="container">
+        <h3>Ready to Get Started?</h3>
+        <p>Join thousands of satisfied customers and garage owners</p>
+        <a href="{% url 'accounts:signup' %}" class="btn btn-light btn-lg">
+            <i class="bi bi-person-plus"></i> Sign Up Now
+        </a>
+        <a href="{% url 'accounts:user_login' %}" class="btn btn-outline-light btn-lg">
+            <i class="bi bi-box-arrow-in-right"></i> Login
+        </a>
     </div>
 </div>
 {% endif %}
-
 
 {% endblock %}
