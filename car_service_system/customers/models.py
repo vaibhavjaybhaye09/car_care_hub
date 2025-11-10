@@ -1,6 +1,9 @@
 from django.db import models
 from django.conf import settings
+from garage.models import Garage
+# from bookings.models import Booking
 from garage.models import Garage  # ✅ safe import
+
 
 User = settings.AUTH_USER_MODEL
 
@@ -54,6 +57,8 @@ class Vehicle(models.Model):
 class Review(models.Model):
     customer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reviews')
     garage = models.ForeignKey(Garage, on_delete=models.CASCADE, related_name='reviews')
+    # booking = models.ForeignKey(Booking, on_delete=models.SET_NULL, null=True, blank=True)
+    booking = models.ForeignKey('bookings.Booking', on_delete=models.SET_NULL, null=True, blank=True)
     booking = models.ForeignKey('bookings.Booking', on_delete=models.SET_NULL, null=True, blank=True)  # ✅ fixed here
     rating = models.PositiveIntegerField(default=5)
     comment = models.TextField(blank=True)
