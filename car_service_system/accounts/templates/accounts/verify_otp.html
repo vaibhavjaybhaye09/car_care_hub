@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+ <!-- {% extends 'base.html' %}
 {% block content %}
 <style>
     .otp-card {
@@ -78,8 +78,8 @@
 
                     <label class="form-label">Enter OTP Code</label>
                     <div class="otp-inputs">
-                        <input type="text" inputmode="numeric" maxlength="1" class="otp-box" aria-label="Digit 1">
-                        <input type="text" inputmode="numeric" maxlength="1" class="otp-box" aria-label="Digit 2">
+                        <input type="text" inputmode="numeric" maxlength="6" class="otp-box" aria-label="Digit 6">
+                        <!-- <input type="text" inputmode="numeric" maxlength="1" class="otp-box" aria-label="Digit 2">
                         <input type="text" inputmode="numeric" maxlength="1" class="otp-box" aria-label="Digit 3">
                         <input type="text" inputmode="numeric" maxlength="1" class="otp-box" aria-label="Digit 4">
                         <input type="text" inputmode="numeric" maxlength="1" class="otp-box" aria-label="Digit 5">
@@ -175,6 +175,146 @@
         const interval = setInterval(tick, 1000);
     })();
 </script>
+-->
+
+<style>
+  .otp-card {
+    border: none;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+    background: #fff;
+
+    /* ✅ keep the card from collapsing */
+    max-width: 520px;
+    width: 100%;
+    margin: 40px auto;   /* center card on the page */
+  }
+  .otp-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #fff;
+    padding: 28px 24px;
+    text-align: center;
+  }
+  .otp-header h2 { margin: 0; font-weight: 800; }
+  .otp-subtitle { color: rgba(255,255,255,0.9); margin-top: 8px; font-size: 0.95rem; }
+
+  /* ✅ single input layout */
+  .otp-inputs {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+    width: 100%;
+  }
+  .otp-box {
+    height: 58px;
+    width: 100%;
+    max-width: 320px;   /* nice width on desktop, shrinks on mobile */
+    text-align: center;
+    font-size: 1.4rem;
+    border-radius: 12px;
+    border: 2px solid #e9ecef;
+    transition: all 0.2s ease;
+  }
+  .otp-box:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 4px rgba(102,126,234,0.15);
+  }
+  .resend-disabled { pointer-events: none; opacity: 0.6; }
+  .verify-btn { padding: 12px 16px; border-radius: 12px; font-weight: 600; }
+</style>
+
+<div class="container py-4"><!-- ✅ ensure a container to control page width -->
+  <div class="otp-card">
+    <div class="otp-header">
+      <h2><i class="bi bi-shield-lock"></i> Verify OTP</h2>
+      <div class="otp-subtitle">
+        We sent a 6-digit code to your email for <strong>{{ username }}</strong>.
+      </div>
+    </div>
+
+    <div class="p-4 p-lg-5">
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        {% endfor %}
+      {% endif %}
+
+      <form method="post" id="otpForm">
+        {% csrf_token %}
+
+        <label class="form-label">Enter OTP Code</label>
+        <div class="otp-inputs">
+          <input
+            type="text"
+            name="otp"
+            id="otp"
+            inputmode="numeric"
+            maxlength="6"
+            class="otp-box"
+            placeholder="Enter 6-digit OTP">
+        </div>
+
+        <small class="text-muted d-block mb-3">Enter the 6-digit code sent to your email</small>
+
+        <div class="d-grid gap-2">
+          <button type="submit" class="btn btn-primary verify-btn">Verify</button>
+        </div>
+      </form>
+
+      <div class="mt-4 text-center">
+        <p class="mb-2">
+          <a id="resendLink" href="{% url 'accounts:resend_otp' %}" class="text-decoration-none">
+            <i class="bi bi-arrow-clockwise"></i> Resend OTP Code
+            <span id="resendTimer" class="text-muted">(60s)</span>
+          </a>
+        </p>
+        <p class="mb-0">
+          <a href="{% url 'accounts:user_login' %}" class="text-decoration-none">
+            <i class="bi bi-arrow-left"></i> Back to Login
+          </a>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  (function () {
+    const otpInput = document.getElementById('otp');
+    const form = document.getElementById('otpForm');
+    const resendLink = document.getElementById('resendLink');
+    const timerEl = document.getElementById('resendTimer');
+
+    otpInput && otpInput.focus();
+
+    otpInput.addEventListener('input', () => {
+      otpInput.value = otpInput.value.replace(/\D/g, '').slice(0, 6);
+    });
+
+    form.addEventListener('submit', (e) => {
+      if (!/^[0-9]{6}$/.test(otpInput.value)) {
+        e.preventDefault();
+        otpInput.focus();
+      }
+    });
+
+    // Resend countdown
+    let remaining = 60;
+    resendLink.classList.add('resend-disabled');
+    const interval = setInterval(() => {
+      remaining -= 1;
+      if (timerEl) timerEl.textContent = `(${remaining}s)`;
+      if (remaining <= 0) {
+        resendLink.classList.remove('resend-disabled');
+        if (timerEl) timerEl.textContent = '';
+        clearInterval(interval);
+      }
+    }, 1000);
+  })();
+</script>
 {% endblock %}
-
-
