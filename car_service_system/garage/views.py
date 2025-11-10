@@ -13,11 +13,11 @@ from .forms import GarageProfileForm, GarageServiceForm, ServiceTypeForm
 def garage_dashboard(request):
     if request.user.role != 'garage':
         messages.error(request, 'Unauthorized access.')
-        return redirect('login')
+        return redirect('accounts:login')
 
     garage = Garage.objects.filter(user=request.user).first()
     services = GarageService.objects.filter(garage=garage)
-    garage = Garage.objects.filter(user=request.user).first()
+    # garage = Garage.objects.filter(user=request.user).first()
     if not garage:
         messages.warning(request, "Please complete your garage profile first.")
         return redirect('garage_profile')
@@ -35,7 +35,7 @@ def garage_dashboard(request):
 def garage_profile(request):
     if request.user.role != 'garage':
         messages.error(request, 'Unauthorized access.')
-        return redirect('login')
+        return redirect('accounts:login')
 
     garage, created = Garage.objects.get_or_create(user=request.user)
     if request.method == 'POST':
@@ -47,7 +47,7 @@ def garage_profile(request):
             return redirect('garage_dashboard')
     else:
         form = GarageProfileForm(instance=garage)
-    return render(request, 'garage/garage_profile.html', {'form': form})
+    return render(request, 'garage/garage_profile.html', {'form': form, 'garage':garage})
 
 
 # -------------------------------------------------------

@@ -157,3 +157,7 @@ SERVER_EMAIL = EMAIL_HOST_USER
 # Email timeout
 EMAIL_TIMEOUT = 20
 
+import os
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
