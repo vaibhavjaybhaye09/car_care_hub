@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db.models import Q
-from .models import Vehicle, Review
+from customers.models import Vehicle, Review
 from .forms import VehicleForm, ReviewForm
 from garage.models import Garage
 from bookings.models import Booking
@@ -145,3 +145,8 @@ def add_review(request, garage_id):
     else:
         form = ReviewForm()
     return render(request, 'customers/add_review.html', {'form': form, 'garage': garage})
+
+
+@login_required
+def customers_profile(request):
+    return render(request, 'customers/customer_profile.html')

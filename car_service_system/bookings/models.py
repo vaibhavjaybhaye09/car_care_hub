@@ -20,6 +20,7 @@ class Booking(models.Model):
     ]
 
     booking_id = models.CharField(max_length=15, unique=True, editable=False,default='TEMP')
+    booking_id = models.CharField(max_length=15, unique=True, editable=False ,null=True, blank=True)
     customer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='bookings')
     garage = models.ForeignKey(Garage, on_delete=models.CASCADE, related_name='bookings')
     vehicle = models.ForeignKey(Vehicle, on_delete=models.CASCADE, related_name='bookings')

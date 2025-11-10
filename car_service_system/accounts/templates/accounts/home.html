@@ -1,6 +1,8 @@
 {% extends 'base.html' %}
 {% block title %}Home - Car Service System{% endblock %}
+{% load static %}
 {% block content %}
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
 <!-- Hero Section -->
 <div class="hero-section bg-primary text-white text-center py-5 mb-5 rounded">
     <div class="container">
@@ -48,7 +50,8 @@
                     <i class="bi bi-search-heart display-4 text-primary"></i>
                 </div>
                 <h5 class="card-title">Find Garages</h5>
-                <p class="card-text">Search for nearby garages and service centers based on your location. Compare services and prices.</p>
+                <p class="card-text">Search for nearby garages and service centers based on your location. Compare
+                    services and prices.</p>
             </div>
         </div>
     </div>
@@ -59,7 +62,8 @@
                     <i class="bi bi-calendar-check display-4 text-success"></i>
                 </div>
                 <h5 class="card-title">Book Services</h5>
-                <p class="card-text">Easily book car service appointments online. Choose your preferred date and time.</p>
+                <p class="card-text">Easily book car service appointments online. Choose your preferred date and time.
+                </p>
             </div>
         </div>
     </div>
@@ -77,33 +81,76 @@
 </div>
 
 <!-- How It Works Section -->
-<div class="row mb-5">
+<!-- <div class="row mb-5">
     <div class="col-12">
         <h2 class="text-center mb-4">How It Works</h2>
         <div class="row g-4">
             <div class="col-md-3 text-center">
-                <div class="step-number bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px; font-size: 24px; font-weight: bold;">1</div>
+                <div class="step-number bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3"
+                    style="width: 60px; height: 60px; font-size: 24px; font-weight: bold;">1</div>
                 <h5>Sign Up</h5>
                 <p>Create your account as a customer or garage owner</p>
             </div>
             <div class="col-md-3 text-center">
-                <div class="step-number bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px; font-size: 24px; font-weight: bold;">2</div>
+                <div class="step-number bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3"
+                    style="width: 60px; height: 60px; font-size: 24px; font-weight: bold;">2</div>
                 <h5>Add Vehicle</h5>
                 <p>Register your vehicle details (for customers)</p>
             </div>
             <div class="col-md-3 text-center">
-                <div class="step-number bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px; font-size: 24px; font-weight: bold;">3</div>
+                <div class="step-number bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3"
+                    style="width: 60px; height: 60px; font-size: 24px; font-weight: bold;">3</div>
                 <h5>Search & Book</h5>
                 <p>Find garages and book your service appointment</p>
             </div>
             <div class="col-md-3 text-center">
-                <div class="step-number bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px; font-size: 24px; font-weight: bold;">4</div>
+                <div class="step-number bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3"
+                    style="width: 60px; height: 60px; font-size: 24px; font-weight: bold;">4</div>
                 <h5>Get Service</h5>
                 <p>Visit the garage and get your vehicle serviced</p>
             </div>
         </div>
     </div>
-</div>
+</div> -->
+<!-- How It Works Section -->
+<section class="how-it-works py-5">
+  <div class="container">
+    <h2 class="fw-bold mb-5 text-center text-primary">How it Works?</h2>
+
+    <div class="timeline">
+      <!-- Step 1 -->
+      <div class="timeline-item">
+        <div class="timeline-icon">1</div>
+        <div class="timeline-content">
+          <h5 class="fw-bold">Car Pick-up</h5>
+          <p>Your car will be picked from your location.</p>
+          <img src="{% static 'images/car-pick-up.svg' %}" alt="Car Pickup" class="img-fluid step-img">
+        </div>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="timeline-item">
+        <div class="timeline-icon">2</div>
+        <div class="timeline-content">
+          <h5 class="fw-bold">Car Service</h5>
+          <p>Your car will be serviced by trained car mechanics.</p>
+          <img src="{% static 'images/car-service.svg' %}" alt="Car Service" class="img-fluid step-img">
+        </div>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="timeline-item">
+        <div class="timeline-icon">3</div>
+        <div class="timeline-content">
+          <h5 class="fw-bold">Car Drop</h5>
+          <p>Your car will be dropped at your location.</p>
+          <img src="{% static 'images/car-drop.svg' %}" alt="Car Drop" class="img-fluid step-img">
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 
 <!-- Services Section -->
 <div class="row mb-5">
@@ -145,6 +192,170 @@
         </div>
     </div>
 </div>
+{% if not user.is_authenticated %}
+<!-- For Garages Section -->
+<section class="garages-section py-5">
+  <div class="container">
+    <div class="row align-items-center g-5">
+
+      <!-- Left side: Text Content -->
+      <div class="col-lg-6">
+        <h2 class="fw-bold text-primary mb-3">For Garages & Service Centers</h2>
+        <div class="underline mb-3"></div>
+        <p class="text-muted mb-4">
+          Join Car Care Hub and take your business online!  
+          Register your garage, manage bookings, connect with customers, and grow your reach effortlessly.  
+          Our platform helps you showcase your services, pricing, and ratings all in one place.
+        </p>
+
+        <ul class="list-unstyled mb-4">
+          <li class="mb-2">
+            <i class="bi bi-check-circle-fill text-success me-2"></i>
+            Create your online garage profile
+          </li>
+          <li class="mb-2">
+            <i class="bi bi-check-circle-fill text-success me-2"></i>
+            Accept and manage bookings easily
+          </li>
+          <li class="mb-2">
+            <i class="bi bi-check-circle-fill text-success me-2"></i>
+            Track customer feedback and ratings
+          </li>
+          <li>
+            <i class="bi bi-check-circle-fill text-success me-2"></i>
+            Boost visibility and attract new customers
+          </li>
+        </ul>
+
+        <div class="d-flex gap-3 flex-wrap">
+          <a href="{% url 'accounts:signup' %}" class="btn btn-primary btn-lg">
+            <i class="bi bi-building-add"></i> Register Your Garage
+          </a>
+          <a href="{% url 'accounts:user_login' %}" class="btn btn-outline-primary btn-lg">
+            <i class="bi bi-person-gear"></i> Manage Dashboard
+          </a>
+        </div>
+      </div>
+
+      <!-- Right side: Illustration or Image -->
+      <div class="col-lg-6 text-center">
+        <img src="{% static 'images/dash.png' %}" alt="Garage Management" class="img-fluid garage-image">
+      </div>
+
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<!-- Banner Section -->
+<section class="banner">
+    <!-- Decorative Gear Icon -->
+    <div class="gear-icon">⚙️</div>
+
+    <div class="container">
+      <div class="row align-items-center">
+        <!-- Car Image -->
+        <div class="col-lg-6 text-center text-lg-start">
+          <img src="{% static 'images/car2.png' %}" 
+               alt="Car" 
+               class="car-img img-fluid rounded shadow">
+        </div>
+
+        <!-- Text & Logos -->
+        <div class="col-lg-6 banner-text">
+          <h1 class="banner-title">
+            We Serve all makes & <span>Models</span>
+          </h1>
+          <p class="banner-subtitle">
+            All luxurious, semi luxurious brands are trustfully serviced under one roof.
+          </p>
+
+          <!-- Brand Logos -->
+          <div class="brand-logos">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/4/44/BMW.svg" alt="BMW">
+            <img src="{% static 'images/audi.png' %}" alt="Audi">
+            <img src="{% static 'images/bajaj.png' %}" alt="Bajaj">
+            <img src="{% static 'images/fiat.png' %}" alt="Fiat">
+            <img src="{% static 'images/toyota.png' %}" alt="Toyota">
+            <img src="{% static 'images/mahindra.png' %}" alt="Mahindra">
+            <img src="{% static 'images/lambo.png' %}" alt="Lamborghini">
+            <img src="{% static 'images/suzuki.png' %}" alt="Suzuki">
+            <img src="{% static 'images/honda.png' %}" alt="Honda">
+            <img src="{% static 'images/hundai.png' %}" alt="Hyundai">
+            <img src="{% static 'images/nissan.png' %}" alt="Nissan">
+            <img src="{% static 'images/tata.png' %}" alt="Tata">
+            <img src="{% static 'images/ford.png' %}" alt="Ford">
+            <img src="{% static 'images/volkswaagan.png' %}" alt="Volkswagen">
+          </div>
+        </div>
+      </div>
+  </section>
+<!-- Customer Testimonials Section -->
+<div class="row mb-5">
+    <div class="col-12">
+        <h2 class="text-center mb-4">What Our Customers Say</h2>
+        <div class="row g-4">
+
+            <!-- Testimonial 1 -->
+            <div class="col-md-6 col-lg-3">
+                <div class="card shadow-sm h-100 border-0">
+                    <div class="card-body text-center">
+                        <i class="bi bi-chat-quote text-primary display-6 mb-3"></i>
+                        <p class="card-text fst-italic">
+                            "Amazing service! The garage arrived on time and fixed my car quickly. Highly recommended!"
+                        </p>
+                        <h6 class="fw-bold mt-3 mb-0">Amit Sharma</h6>
+                        <small class="text-muted">Customer from Pune</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Testimonial 2 -->
+            <div class="col-md-6 col-lg-3">
+                <div class="card shadow-sm h-100 border-0">
+                    <div class="card-body text-center">
+                        <i class="bi bi-chat-quote text-success display-6 mb-3"></i>
+                        <p class="card-text fst-italic">
+                            "Booking was super easy and transparent. I could track everything online!"
+                        </p>
+                        <h6 class="fw-bold mt-3 mb-0">Priya Patel</h6>
+                        <small class="text-muted">Customer from Mumbai</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Testimonial 3 -->
+            <div class="col-md-6 col-lg-3">
+                <div class="card shadow-sm h-100 border-0">
+                    <div class="card-body text-center">
+                        <i class="bi bi-chat-quote text-info display-6 mb-3"></i>
+                        <p class="card-text fst-italic">
+                            "The staff were friendly and explained everything clearly. My car feels brand new!"
+                        </p>
+                        <h6 class="fw-bold mt-3 mb-0">Rahul Mehta</h6>
+                        <small class="text-muted">Customer from Delhi</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Testimonial 4 -->
+            <div class="col-md-6 col-lg-3">
+                <div class="card shadow-sm h-100 border-0">
+                    <div class="card-body text-center">
+                        <i class="bi bi-chat-quote text-warning display-6 mb-3"></i>
+                        <p class="card-text fst-italic">
+                            "Best platform for finding trusted garages nearby. Saved me so much time!"
+                        </p>
+                        <h6 class="fw-bold mt-3 mb-0">Sneha Rao</h6>
+                        <small class="text-muted">Customer from Hyderabad</small>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
 
 <!-- Call to Action -->
 {% if not user.is_authenticated %}
@@ -166,16 +377,5 @@
 </div>
 {% endif %}
 
-<style>
-.hero-section {
-    background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%);
-    padding: 60px 20px;
-}
-.card {
-    transition: transform 0.2s;
-}
-.card:hover {
-    transform: translateY(-5px);
-}
-</style>
+
 {% endblock %}
