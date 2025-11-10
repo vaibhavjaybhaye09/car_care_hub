@@ -22,3 +22,12 @@ class BookingForm(forms.ModelForm):
 
         if user:
             self.fields['vehicle'].queryset = Vehicle.objects.filter(customer=user)
+            # Group services by main category (parent)
+        grouped = []
+        main_categories = ServiceType.objects.filter(parent__isnull=True).order_by('name')
+        for main in main_categories:
+            subs = ServiceType.objects.filter(parent=main).order_by('name')
+            if subs.exists():
+                grouped.append((main.name, [(sub.id, sub.name) for sub in subs]))
+
+        self.fields['service'].choices = grouped
