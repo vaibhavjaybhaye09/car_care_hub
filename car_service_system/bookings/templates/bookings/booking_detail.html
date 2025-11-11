@@ -1,34 +1,146 @@
 {% extends 'base.html' %}
 {% block title %}Booking Details{% endblock %}
 {% block content %}
-<div class="container col-md-8 mt-5">
-  <div class="card shadow-sm border-0">
-    <div class="card-header bg-primary text-white">
-      <h5><i class="bi bi-receipt"></i> Booking Details</h5>
-    </div>
-    <div class="card-body">
-      <p><strong>Booking ID:</strong> {{ booking.booking_id }}</p>
-      <p><strong>Garage:</strong> {{ booking.garage.name }}</p>
-      <p><strong>Service:</strong> {{ booking.service.name }}</p>
-      <p><strong>Vehicle:</strong> {{ booking.vehicle.brand }} {{ booking.vehicle.model }}</p>
-      <p><strong>Delivery:</strong> {{ booking.delivery_option }}</p>
-      <p><strong>Date:</strong> {{ booking.appointment_date|date:"d M Y" }}</p>
-      <p><strong>Status:</strong> 
-        <span class="badge bg-{% if booking.status == 'Completed' %}success{% elif booking.status == 'In Service' %}warning{% elif booking.status == 'Ready' %}info{% else %}secondary{% endif %}">
-          {{ booking.status }}
-        </span>
-      </p>
-      {% if booking.remarks %}<p><strong>Remarks:</strong> {{ booking.remarks }}</p>{% endif %}
-      <hr>
-      <div class="text-end">
-        {% if booking.status == 'Completed' %}
-        <a href="{% url 'bookings:download_invoice' booking.id %}" class="btn btn-outline-success">
-          <i class="bi bi-download"></i> Download Invoice
-        </a>
-        {% endif %}
-        <a href="{% url 'bookings:booking_list' %}" class="btn btn-outline-secondary">Back</a>
-      </div>
-    </div>
+<style>
+  /* --- Futuristic Card Styling --- */
+  .booking-container {
+    max-width: 850px;
+    margin: 60px auto;
+    background: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    animation: fadeIn 0.5s ease-in-out;
+  }
+
+  .booking-header {
+    background: linear-gradient(135deg, #2563eb, #1e3a8a);
+    color: #fff;
+    padding: 24px 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .booking-header h2 {
+    font-size: 1.5rem;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .booking-body {
+    padding: 30px;
+    background-color: #f9fafb;
+  }
+
+  .booking-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  .booking-item strong {
+    color: #1f2937;
+  }
+
+  .badge {
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-transform: capitalize;
+  }
+
+  .bg-success { background-color: #d1fae5; color: #065f46; }
+  .bg-warning { background-color: #fef3c7; color: #92400e; }
+  .bg-info { background-color: #dbeafe; color: #1e3a8a; }
+  .bg-secondary { background-color: #e5e7eb; color: #374151; }
+
+  .booking-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    background: #fff;
+    padding: 20px 30px;
+    border-top: 1px solid #e5e7eb;
+  }
+
+  .btn-custom {
+    padding: 10px 18px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .btn-outline-success {
+    border: 2px solid #16a34a;
+    color: #16a34a;
+  }
+
+  .btn-outline-success:hover {
+    background: #16a34a;
+    color: white;
+  }
+
+  .btn-outline-secondary {
+    border: 2px solid #6b7280;
+    color: #374151;
+  }
+
+  .btn-outline-secondary:hover {
+    background: #6b7280;
+    color: white;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 600px) {
+    .booking-body { padding: 20px; }
+    .booking-item { flex-direction: column; align-items: flex-start; }
+    .booking-footer { flex-direction: column; align-items: flex-end; }
+  }
+</style>
+
+<div class="booking-container">
+  <div class="booking-header">
+    <h2><i class="bi bi-receipt"></i> Booking Details</h2>
+    <span class="badge bg-{% if booking.status == 'Completed' %}success{% elif booking.status == 'In Service' %}warning{% elif booking.status == 'Ready' %}info{% else %}secondary{% endif %}">
+      {{ booking.status }}
+    </span>
+  </div>
+
+  <div class="booking-body">
+    <div class="booking-item"><strong>Booking ID:</strong> <span>#{{ booking.booking_id }}</span></div>
+    <div class="booking-item"><strong>Garage:</strong> <span>{{ booking.garage.name }}</span></div>
+    <div class="booking-item"><strong>Service:</strong> <span>{{ booking.service.name }}</span></div>
+    <div class="booking-item"><strong>Vehicle:</strong> <span>{{ booking.vehicle.brand }} {{ booking.vehicle.model }}</span></div>
+    <div class="booking-item"><strong>Delivery:</strong> <span>{{ booking.delivery_option }}</span></div>
+    <div class="booking-item"><strong>Date:</strong> <span>{{ booking.appointment_date|date:"d M Y" }}</span></div>
+    {% if booking.remarks %}
+      <div class="booking-item"><strong>Remarks:</strong> <span>{{ booking.remarks }}</span></div>
+    {% endif %}
+  </div>
+
+  <div class="booking-footer">
+    {% if booking.status == 'Completed' %}
+      <a href="{% url 'bookings:download_invoice' booking.id %}" class="btn-custom btn-outline-success">
+        <i class="bi bi-download"></i> Download Invoice
+      </a>
+    {% endif %}
+    <a href="{% url 'bookings:booking_list' %}" class="btn-custom btn-outline-secondary">
+      <i class="bi bi-arrow-left"></i> Back
+    </a>
   </div>
 </div>
 {% endblock %}
+
