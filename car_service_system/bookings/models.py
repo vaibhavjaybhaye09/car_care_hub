@@ -25,6 +25,7 @@ class Booking(models.Model):
     garage = models.ForeignKey(Garage, on_delete=models.CASCADE, related_name='bookings')
     vehicle = models.ForeignKey(Vehicle, on_delete=models.CASCADE, related_name='bookings')
     service = models.ForeignKey(ServiceType, on_delete=models.CASCADE, related_name='bookings')
+    # service = models.ManyToManyField(ServiceType)
     delivery_option = models.CharField(max_length=20, choices=DELIVERY_CHOICES, default='Self-Drop')
     appointment_date = models.DateField()
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Pending')
