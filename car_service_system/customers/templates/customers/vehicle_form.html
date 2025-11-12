@@ -2,39 +2,162 @@
 {% block title %}{{ edit_mode|yesno:"Edit Vehicle,Add Vehicle" }}{% endblock %}
 
 {% block content %}
-<div class="container col-md-6 mt-5">
-    <div class="card shadow-sm border-0">
-        <div class="card-header bg-primary text-white">
-            <h5 class="mb-0">{{ edit_mode|yesno:"Edit Vehicle,Add a Vehicle" }}</h5>
-        </div>
+<style>
+  /* ===== Form Container ===== */
+  .form-container {
+    max-width: 500px;
+    margin: 3rem auto;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
 
-        <div class="card-body">
-            <form method="POST" novalidate>
-                {% csrf_token %}
-                {% for field in form %}
-                    <div class="mb-3">
-                        <label class="form-label">{{ field.label }}</label>
-                        {{ field }}
-                        {% if field.errors %}
-                            <div class="text-danger small mt-1">{{ field.errors|striptags }}</div>
-                        {% endif %}
-                    </div>
-                {% endfor %}
+  .form-card {
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+  }
 
-                <div class="text-end mt-4">
-                    <button type="submit" class="btn btn-success">
-                        {% if edit_mode %}
-                            <i class="bi bi-save"></i> Update Vehicle
-                        {% else %}
-                            <i class="bi bi-plus-lg"></i> Add Vehicle
-                        {% endif %}
-                    </button>
-                    <a href="{% url 'customers:dashboard' %}" class="btn btn-outline-secondary ms-2">
-                        <i class="bi bi-x-circle"></i> Cancel
-                    </a>
-                </div>
-            </form>
-        </div>
+  .card-header {
+    background-color: #1e40af;
+    color: white;
+    text-align: center;
+    padding: 0.9rem;
+  }
+
+  .card-header h5 {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+  }
+
+  .card-body {
+    background-color: #f8fafc;
+    padding: 1.5rem;
+  }
+
+  /* ===== Form Fields ===== */
+  .form-group {
+    margin-bottom: 1rem;
+  }
+
+  .form-label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.35rem;
+    color: #1e3a8a;
+    font-size: 0.9rem;
+  }
+
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    background-color: white;
+    color: #334155;
+  }
+
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus {
+    border-color: #1e40af;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(30, 64, 175, 0.2);
+  }
+
+  /* ===== Buttons ===== */
+  .button-group {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.6rem;
+    margin-top: 1.5rem;
+  }
+
+  .btn {
+    font-size: 0.9rem;
+    border-radius: 6px;
+    padding: 0.45rem 0.9rem;
+    font-weight: 500;
+  }
+
+  .btn-success {
+    background-color: #16a34a;
+    border: none;
+    color: white;
+  }
+
+  .btn-success:hover {
+    background-color: #15803d;
+  }
+
+  .btn-outline {
+    border: 1px solid #cbd5e1;
+    color: #475569;
+    background-color: white;
+  }
+
+  .btn-outline:hover {
+    background-color: #f1f5f9;
+  }
+
+  /* ===== Error Messages ===== */
+  .error-message {
+    color: #dc2626;
+    font-size: 0.8rem;
+    margin-top: 0.3rem;
+  }
+
+  /* ===== Responsive ===== */
+  @media (max-width: 576px) {
+    .form-container {
+      max-width: 90%;
+      margin: 2rem auto;
+    }
+  }
+</style>
+
+<div class="form-container">
+  <div class="card form-card">
+    <div class="card-header">
+      <h5>
+        {% if edit_mode %}
+          <i class="bi bi-pencil-square"></i> Edit Vehicle
+        {% else %}
+          <i class="bi bi-plus-circle"></i> Add Vehicle
+        {% endif %}
+      </h5>
     </div>
+
+    <div class="card-body">
+      <form method="POST" novalidate>
+        {% csrf_token %}
+        {% for field in form %}
+          <div class="form-group">
+            <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+            {{ field }}
+            {% if field.errors %}
+              <div class="error-message">{{ field.errors|striptags }}</div>
+            {% endif %}
+          </div>
+        {% endfor %}
+
+        <div class="button-group">
+          <button type="submit" class="btn btn-success">
+            {% if edit_mode %}
+              <i class="bi bi-save"></i> Update
+            {% else %}
+              <i class="bi bi-plus-lg"></i> Add Vehicle
+            {% endif %}
+          </button>
+          <a href="{% url 'customers:dashboard' %}" class="btn btn-outline">
+            <i class="bi bi-x-circle"></i> Cancel
+          </a>
+        </div>
+      </form>
+    </div>
+  </div>
 </div>
 {% endblock %}

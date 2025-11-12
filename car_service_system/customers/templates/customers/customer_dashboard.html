@@ -2,95 +2,278 @@
 {% block title %}My Dashboard{% endblock %}
 
 {% block content %}
-<div class="container my-4">
-  <h2 class="mb-4"><i class="bi bi-speedometer2"></i> My Dashboard</h2>
+<style>
+  .dashboard-container {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 0.95rem;
+  }
+
+  .dashboard-title {
+    color: #1e40af;
+    font-weight: 700;
+    font-size: 1.5rem;
+  }
+
+  /* ===== Vehicle Section ===== */
+  .card-custom {
+    border: none;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .card-header-custom {
+    background-color: #1e40af;
+    color: white;
+    padding: 0.75rem 1rem;
+    font-size: 0.95rem;
+  }
+
+  .add-btn {
+    background-color: white;
+    color: #1e40af;
+    border: none;
+    padding: 0.35rem 0.75rem;
+    border-radius: 5px;
+    font-size: 0.8rem;
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  .vehicle-card {
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+  }
+
+  .vehicle-card-body {
+    padding: 0.75rem;
+    background-color: white;
+  }
+
+  .vehicle-title {
+    color: #1e3a8a;
+    font-weight: 700;
+    margin-bottom: 0.4rem;
+    font-size: 0.95rem;
+  }
+
+  .vehicle-info {
+    margin: 0.25rem 0;
+    color: #334155;
+    font-size: 0.85rem;
+  }
+
+  .vehicle-info strong {
+    color: #1e40af;
+    font-size: 0.8rem;
+  }
+
+  .vehicle-card-footer {
+    background-color: #f1f5f9;
+    padding: 0.5rem 0.75rem;
+    border-top: 1px solid #e2e8f0;
+    font-size: 0.8rem;
+  }
+
+  .edit-btn {
+    color: #475569;
+    border: 1px solid #cbd5e1;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    text-decoration: none;
+    background-color: white;
+  }
+
+  .delete-btn {
+    color: #dc2626;
+    border: 1px solid #fca5a5;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    text-decoration: none;
+    background-color: #fef2f2;
+  }
+
+  .no-data {
+    color: #64748b;
+    font-size: 0.85rem;
+    max-width: 300px;
+    margin: 0.5rem auto;
+  }
+
+  /* ===== Table Styles ===== */
+  table.custom-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+  }
+
+  table.custom-table th {
+    background-color: #e0f2fe;
+    color: #1e40af;
+    padding: 0.5rem 0.75rem;
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.8rem;
+  }
+
+  table.custom-table td {
+    padding: 0.5rem 0.75rem;
+    color: #334155;
+  }
+
+  table.custom-table tr {
+    border-bottom: 1px solid #e2e8f0;
+  }
+
+  .status-badge {
+    padding: 0.25rem 0.6rem;
+    border-radius: 12px;
+    font-size: 0.7rem;
+    font-weight: 500;
+    color: white;
+    display: inline-block;
+    min-width: 60px;
+    text-align: center;
+  }
+
+  .status-completed {
+    background-color: #16a34a;
+  }
+
+  .status-inprocess {
+    background-color: #d97706;
+  }
+
+  .status-pending {
+    background-color: #64748b;
+  }
+
+  .status-default {
+    background-color: #1f2937;
+  }
+
+  .footer-btn {
+    background-color: #16a34a;
+    color: white;
+    padding: 0.5rem 1.25rem;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    display: inline-block;
+  }
+</style>
+
+<div class="container my-4 dashboard-container">
+  <h2 class="text-center mb-3 dashboard-title">
+    <i class="bi bi-speedometer2" style="font-size: 1.3rem;"></i> My Dashboard
+  </h2>
 
   <!-- Vehicles Section -->
-  <div class="card mb-4 shadow-sm">
-    <div class="card-header d-flex justify-content-between align-items-center">
-      <h5 class="mb-0"><i class="bi bi-car-front"></i> Your Vehicles</h5>
-      <a href="{% url 'customers:add_vehicle' %}" class="btn btn-sm btn-primary">
-        <i class="bi bi-plus-lg"></i> Add Vehicle
+  <div class="card mb-4 card-custom">
+    <div class="card-header d-flex justify-content-between align-items-center card-header-custom">
+      <h5 class="mb-0" style="font-weight: 600; font-size: 1rem;">
+        <i class="bi bi-car-front-fill" style="font-size: 0.9rem;"></i> Your Vehicles
+      </h5>
+      <a href="{% url 'customers:add_vehicle' %}" class="add-btn">
+        <i class="bi bi-plus-lg" style="font-size: 0.8rem;"></i> Add
       </a>
     </div>
-    <div class="card-body">
-      {% if vehicles %}
-        <div class="row">
-          {% for v in vehicles %}
-          <div class="col-md-4 mb-3">
-            <div class="card border-0 shadow-sm h-100">
-              <div class="card-body">
-                <h6 class="card-title mb-1">{{ v.brand }} {{ v.model }}</h6>
-                <p class="mb-1"><strong>Reg:</strong> {{ v.registration_number }}</p>
-                <p class="mb-1"><strong>Fuel:</strong> {{ v.fuel_type }}</p>
-                <p class="mb-1"><strong>Year:</strong> {{ v.year_of_manufacture }}</p>
 
-                <div class="mt-2">
-                  <a href="{% url 'customers:edit_vehicle' v.id %}" class="btn btn-sm btn-outline-primary">
-                    <i class="bi bi-pencil"></i> Edit
-                  </a>
-                  <a href="{% url 'customers:delete_vehicle' v.id %}" class="btn btn-sm btn-outline-danger">
-                    <i class="bi bi-trash"></i> Delete
-                  </a>
-                </div>
-              </div>
+    <div class="card-body" style="padding: 1rem; background-color: #f8fafc;">
+      {% if vehicles %}
+      <div class="row g-3">
+        {% for v in vehicles %}
+        <div class="col-md-4 col-sm-6">
+          <div class="card h-100 vehicle-card">
+            <div class="card-body vehicle-card-body">
+              <h6 class="vehicle-title">{{ v.brand }} {{ v.model }}</h6>
+              <p class="vehicle-info"><strong>Reg:</strong> {{ v.registration_number }}</p>
+              <p class="vehicle-info"><strong>Fuel:</strong> {{ v.fuel_type }}</p>
+              <p class="vehicle-info"><strong>Year:</strong> {{ v.year_of_manufacture }}</p>
+            </div>
+            <div class="card-footer d-flex justify-content-between vehicle-card-footer">
+              <a href="{% url 'customers:edit_vehicle' v.id %}" class="edit-btn">
+                <i class="bi bi-pencil-square" style="font-size: 0.7rem;"></i> Edit
+              </a>
+              <a href="{% url 'customers:delete_vehicle' v.id %}" class="delete-btn">
+                <i class="bi bi-trash" style="font-size: 0.7rem;"></i> Delete
+              </a>
             </div>
           </div>
-          {% endfor %}
         </div>
+        {% endfor %}
+      </div>
       {% else %}
-        <p class="text-muted">No vehicles added yet. Add one to start booking services.</p>
+      <div class="text-center py-4">
+        <i class="bi bi-car-front" style="font-size: 2.5rem; color: #94a3b8;"></i>
+        <h5 style="margin-top: 0.5rem; color: #475569; font-size: 1rem;">No Vehicles Added</h5>
+        <p class="no-data">Add your first vehicle to get started.</p>
+        <a href="{% url 'customers:add_vehicle' %}" class="btn btn-primary" style="background-color: #1e40af;">
+          Get Started
+        </a>
+      </div>
       {% endif %}
     </div>
   </div>
 
   <!-- Recent Bookings Section -->
-  <div class="card shadow-sm">
-    <div class="card-header d-flex justify-content-between align-items-center">
-      <h5 class="mb-0"><i class="bi bi-calendar-check"></i> Recent Bookings</h5>
-      <a href="{% url 'customers:booking_history' %}" class="btn btn-sm btn-outline-secondary">
-        View All
-      </a>
+  <div class="card card-custom">
+    <div class="card-header d-flex justify-content-between align-items-center card-header-custom">
+      <h5 class="mb-0" style="font-weight: 600; font-size: 1rem;">
+        <i class="bi bi-calendar3-event-check-fill" style="font-size: 0.9rem;"></i> Recent Bookings
+      </h5>
+      <a href="{% url 'customers:booking_history' %}" class="add-btn">View All</a>
     </div>
-    <div class="card-body">
+
+    <div class="card-body" style="padding: 1rem; background-color: #f8fafc;">
       {% if bookings %}
-        <div class="table-responsive">
-          <table class="table table-bordered align-middle">
-            <thead class="table-light text-center">
-              <tr>
-                <th>Garage</th>
-                <th>Service</th>
-                <th>Status</th>
-                <th>Booked On</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for b in bookings %}
-              <tr>
-                <td>{{ b.garage.name }}</td>
-                <td>{{ b.service_type }}</td>
-                <td class="text-center">
-                  <span class="badge bg-
-                    {% if b.status == 'Completed' %}success
-                    {% elif b.status == 'In Process' %}warning
-                    {% elif b.status == 'Pending' %}secondary
-                    {% else %}dark{% endif %}">
-                    {{ b.status }}
-                  </span>
-                </td>
-                <td>{{ b.booked_on|date:"d M Y" }}</td>
-              </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-        </div>
+      <div class="table-responsive">
+        <table class="custom-table">
+          <thead>
+            <tr>
+              <th>Garage</th>
+              <th>Service</th>
+              <th>Status</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for b in bookings %}
+            <tr>
+              <td>{{ b.garage.name }}</td>
+              <td>{{ b.service_type }}</td>
+              <td>
+                <span class="status-badge
+                  {% if b.status == 'Completed' %}status-completed
+                  {% elif b.status == 'In Process' %}status-inprocess
+                  {% elif b.status == 'Pending' %}status-pending
+                  {% else %}status-default{% endif %}">
+                  {{ b.status }}
+                </span>
+              </td>
+              <td>{{ b.booked_on|date:"d M Y" }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
       {% else %}
-        <p class="text-muted">No recent bookings found.</p>
+      <div class="text-center py-4">
+        <i class="bi bi-calendar-x" style="font-size: 2.5rem; color: #94a3b8;"></i>
+        <h5 style="margin-top: 0.5rem; color: #475569; font-size: 1rem;">No Bookings Yet</h5>
+        <p class="no-data">Book a service to see it here.</p>
+      </div>
       {% endif %}
     </div>
-    <div class="card-footer text-center">
-      <a href="{% url 'customers:search_garages' %}" class="btn btn-success">
-        <i class="bi bi-search"></i> Search Garages & Book Now
+
+    <div class="card-footer text-center" style="background-color: #f1f5f9; padding: 1rem; border-top: 1px solid #e2e8f0;">
+      <a href="{% url 'customers:search_garages' %}" class="footer-btn">
+        <i class="bi bi-search-heart" style="font-size: 0.8rem;"></i> Search & Book
       </a>
     </div>
   </div>
