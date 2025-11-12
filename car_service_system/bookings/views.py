@@ -24,6 +24,7 @@ def book_service(request, garage_id=None):
             booking.customer = request.user
             booking.status = 'Pending'
             booking.save()
+            form.save_m2m() 
 
             # Send booking confirmation email
             send_mail(
