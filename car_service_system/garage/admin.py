@@ -14,3 +14,7 @@ class GarageServiceAdmin(admin.ModelAdmin):
     list_display = ['garage', 'service_type', 'price', 'opening_hours']
 
 # Register your models here.
+
+# @admin.register(Garage)
+# class arageServiceAdmin(admin.ModelAdmin):
+#     list_display = ['garage', 'service_type', 'price', 'opening_hours']
