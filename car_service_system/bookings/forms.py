@@ -30,4 +30,4 @@ class BookingForm(forms.ModelForm):
             if subs.exists():
                 grouped.append((main.name, [(sub.id, sub.name) for sub in subs]))
 
-        self.fields['services'].choices = grouped
+        self.fields['service'].choices = grouped
