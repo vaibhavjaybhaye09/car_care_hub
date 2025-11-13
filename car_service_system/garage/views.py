@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .models import Garage, GarageService, ServiceType
 from .forms import GarageProfileForm, GarageServiceForm, ServiceTypeForm
+from bookings.models import Booking, Invoice
 # from accounts.models import User
 
 
@@ -124,3 +125,32 @@ def delete_service_type(request, pk):
         messages.success(request, 'Service type deleted successfully!')
         return redirect('service_type_list')
     return render(request, 'garage/service_type_confirm_delete.html', {'service_type': service_type})
+
+@login_required
+def garage_bookings(request):
+    """Show all customer bookings for the logged-in garage"""
+    garage = get_object_or_404(Garage, user=request.user)
+    bookings = Booking.objects.filter(garage=garage).order_by('-booked_on')
+    return render(request, 'garage/garage_bookings.html', {'bookings': bookings})
+
+
+@login_required
+def update_booking_status(request, booking_id):
+    """Allow the garage to update booking status and generate invoice when completed"""
+    booking = get_object_or_404(Booking, id=booking_id, garage__user=request.user)
+
+    if request.method == 'POST':
+        new_status = request.POST.get('status')
+        booking.status = new_status
+        booking.save()
+
+        # 🧾 Automatically create invoice when marked Completed
+        if new_status == 'Completed' and not hasattr(booking, 'invoice'):
+            total = sum(service.price for service in booking.services.all())
+            Invoice.objects.create(booking=booking, amount=total)
+            messages.success(request, 'Invoice generated successfully.')
+
+        messages.success(request, f"Booking marked as {new_status}.")
+        return redirect('garage_bookings')
+
+    return render(request, 'garage/update_booking_status.html', {'booking': booking})

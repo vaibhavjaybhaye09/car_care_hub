@@ -8,25 +8,32 @@ from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
 import os
 
+
 from .models import Booking
+
+from .models import Booking, Invoice
 from .forms import BookingForm
-from garage.models import Garage
+from garage.models import Garage, GarageService
 
 
+# -------------------------------------------------------
+# Customer books a service
+# -------------------------------------------------------
 @login_required
 def book_service(request, garage_id=None):
     garage = get_object_or_404(Garage, id=garage_id) if garage_id else None
 
     if request.method == 'POST':
-        form = BookingForm(request.POST, user=request.user)
+        form = BookingForm(request.POST, user=request.user, garage=garage)
         if form.is_valid():
             booking = form.save(commit=False)
             booking.customer = request.user
+            booking.garage = garage
             booking.status = 'Pending'
             booking.save()
-            form.save_m2m() 
+            form.save_m2m()  # ✅ Save many-to-many services
 
-            # Send booking confirmation email
+            # Optional email
             send_mail(
                 subject="Booking Confirmed",
                 message=f"Your booking (ID: {booking.booking_id}) at {booking.garage.name} has been confirmed.",
@@ -38,46 +45,93 @@ def book_service(request, garage_id=None):
             messages.success(request, 'Booking confirmed successfully!')
             return redirect('bookings:booking_list')
     else:
-        form = BookingForm(user=request.user, initial={'garage': garage})
+        form = BookingForm(user=request.user, garage=garage, initial={'garage': garage})
 
     return render(request, 'bookings/booking_form.html', {'form': form, 'garage': garage})
 
 
+# -------------------------------------------------------
+# Customer Booking List (shows all bookings + invoices)
+# -------------------------------------------------------
 @login_required
 def booking_list(request):
     bookings = Booking.objects.filter(customer=request.user).order_by('-booked_on')
     return render(request, 'bookings/booking_list.html', {'bookings': bookings})
 
 
+# -------------------------------------------------------
+# Garage Booking Management — all customer bookings
+# -------------------------------------------------------
+@login_required
+def garage_bookings(request):
+    garage = get_object_or_404(Garage, user=request.user)
+    bookings = Booking.objects.filter(garage=garage).order_by('-booked_on')
+    return render(request, 'garage/garage_bookings.html', {'bookings': bookings})
+
+
+# -------------------------------------------------------
+# Update Booking Status (Garage Only)
+# -------------------------------------------------------
+@login_required
+def update_booking_status(request, booking_id):
+    booking = get_object_or_404(Booking, id=booking_id, garage__user=request.user)
+
+    if request.method == 'POST':
+        new_status = request.POST.get('status')
+        booking.status = new_status
+        booking.save()
+
+        # ✅ Generate invoice when completed
+        if new_status == 'Completed' and not hasattr(booking, 'invoice'):
+            total = sum(s.price for s in booking.services.all())
+            Invoice.objects.create(booking=booking, amount=total)
+
+        messages.success(request, f"Booking status updated to {new_status}.")
+        return redirect('garage_bookings')
+
+    return render(request, 'garage/update_booking_status.html', {'booking': booking})
+
 @login_required
 def booking_detail(request, pk):
+    """Show details of a single booking for the customer."""
     booking = get_object_or_404(Booking, pk=pk, customer=request.user)
     return render(request, 'bookings/booking_detail.html', {'booking': booking})
 
 
+# -------------------------------------------------------
+# Generate & Download Invoice (PDF)
+# -------------------------------------------------------
 @login_required
 def download_invoice(request, pk):
-    booking = get_object_or_404(Booking, pk=pk, customer=request.user)
+    booking = get_object_or_404(Booking, pk=pk)
 
-    # Generate invoice PDF
+    # Ensure user has permission
+    if booking.customer != request.user and booking.garage.user != request.user:
+        messages.error(request, "Unauthorized access.")
+        return redirect('bookings:booking_list')
+
     invoice_path = f"media/invoices/invoice_{booking.booking_id}.pdf"
     os.makedirs(os.path.dirname(invoice_path), exist_ok=True)
 
+    # Generate invoice PDF
     c = canvas.Canvas(invoice_path, pagesize=A4)
     c.drawString(100, 800, "Smart Garage - Invoice")
     c.drawString(100, 780, f"Booking ID: {booking.booking_id}")
-    c.drawString(100, 760, f"Customer: {booking.customer.get_full_name()}")
+    c.drawString(100, 760, f"Customer: {booking.customer.username}")
     c.drawString(100, 740, f"Garage: {booking.garage.name}")
-    c.drawString(100, 720, f"Service: {booking.service.name}")
-    c.drawString(100, 700, f"Vehicle: {booking.vehicle.brand} {booking.vehicle.model}")
-    c.drawString(100, 680, f"Date: {booking.appointment_date.strftime('%d %b %Y')}")
-    c.drawString(100, 660, f"Status: {booking.status}")
-    c.drawString(100, 640, f"Remarks: {booking.remarks or 'N/A'}")
+    c.drawString(100, 720, f"Date: {booking.appointment_date.strftime('%d %b %Y')}")
+    c.drawString(100, 700, f"Status: {booking.status}")
+
+    y = 680
+    c.drawString(100, y, "Services:")
+    for s in booking.services.all():
+        y -= 20
+        c.drawString(120, y, f"- {s.service_type.name} (₹{s.price})")
+
+    y -= 40
+    c.drawString(100, y, f"Total: ₹{sum(s.price for s in booking.services.all())}")
 
     c.showPage()
     c.save()
-
-    booking.invoice_pdf.name = f"invoices/invoice_{booking.booking_id}.pdf"
-    booking.save()
 
     return FileResponse(open(invoice_path, 'rb'), as_attachment=True, filename=f"Invoice_{booking.booking_id}.pdf")

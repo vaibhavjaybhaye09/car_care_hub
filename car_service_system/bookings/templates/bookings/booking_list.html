@@ -1,19 +1,22 @@
 {% extends 'base.html' %}
 {% block title %}My Bookings{% endblock %}
+
 {% block content %}
 <div class="container mt-4">
   <h3><i class="bi bi-clock-history"></i> My Bookings</h3>
+
   {% if bookings %}
   <table class="table table-striped table-bordered align-middle mt-3">
     <thead class="table-light">
       <tr>
         <th>Booking ID</th>
         <th>Garage</th>
-        <th>Service</th>
+        <th>Services</th>
         <th>Vehicle</th>
         <th>Status</th>
         <th>Date</th>
-        <th></th>
+        <th>Invoice</th>
+        <th>Action</th>
       </tr>
     </thead>
     <tbody>
@@ -21,17 +24,43 @@
       <tr>
         <td>{{ b.booking_id }}</td>
         <td>{{ b.garage.name }}</td>
-        <td>{{ b.service.name }}</td>
+
+        <!-- ✅ Multiple services listed -->
+        <td>
+          <ul class="mb-0 ps-3">
+            {% for s in b.services.all %}
+              <li>{{ s.service_type.name }} <span class="text-muted">(₹{{ s.price }})</span></li>
+            {% empty %}
+              <li class="text-muted">No services selected</li>
+            {% endfor %}
+          </ul>
+        </td>
+
         <td>{{ b.vehicle.brand }} {{ b.vehicle.model }}</td>
+
         <td>
           <span class="badge bg-{% if b.status == 'Completed' %}success{% elif b.status == 'In Service' %}warning{% elif b.status == 'Ready' %}info{% else %}secondary{% endif %}">
             {{ b.status }}
           </span>
         </td>
+
         <td>{{ b.appointment_date|date:"d M Y" }}</td>
+
+        <!-- ✅ Invoice info -->
+        <td>
+          {% if b.invoice %}
+            <div>
+              <strong>₹{{ b.invoice.amount }}</strong><br>
+              <small class="text-muted">{{ b.invoice.generated_on|date:"d M Y" }}</small>
+            </div>
+          {% else %}
+            <span class="text-muted small">Not generated</span>
+          {% endif %}
+        </td>
+
         <td>
           <a href="{% url 'bookings:booking_detail' b.id %}" class="btn btn-sm btn-outline-primary">View</a>
-          {% if b.status == 'Completed' %}
+          {% if b.invoice %}
             <a href="{% url 'bookings:download_invoice' b.id %}" class="btn btn-sm btn-outline-success">Invoice</a>
           {% endif %}
         </td>

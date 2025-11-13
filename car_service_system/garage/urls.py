@@ -5,6 +5,8 @@ urlpatterns = [
     path('dashboard/', views.garage_dashboard, name='garage_dashboard'),
     path('profile/', views.garage_profile, name='garage_profile'),
     path('add_service/', views.add_service, name='add_service'),
+    path('bookings/', views.garage_bookings, name='garage_bookings'),
+    path('bookings/<int:booking_id>/update-status/', views.update_booking_status, name='update_booking_status'),
     path('delete-service/<int:pk>/', views.delete_service, name='delete_service'),
 
      # ✅ Service Type Management

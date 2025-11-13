@@ -13,12 +13,14 @@
         <a href="{% url 'garage_profile' %}" class="btn btn-primary mb-3">Create Garage Profile</a>
     {% endif %}
 
-    <!-- Garage Services -->
+    <!-- ===============================
+         Garage Services Section
+    ================================ -->
     <h3>Your Services</h3>
     <a href="{% url 'add_service' %}" class="btn btn-success mb-3">+ Add Service</a>
 
-    <table class="table table-striped">
-        <thead>
+    <table class="table table-striped align-middle">
+        <thead class="table-light">
             <tr>
                 <th>Service</th>
                 <th>Price (₹)</th>
@@ -31,23 +33,27 @@
             <tr>
                 <td>{{ s.service_type.name }}</td>
                 <td>{{ s.price }}</td>
-                <td>{{ s.opening_hours }}</td>
+                <td>{{ s.opening_hours|default:"Not specified" }}</td>
                 <td>
                     <a href="{% url 'delete_service' s.id %}" class="btn btn-sm btn-danger">Delete</a>
                 </td>
             </tr>
             {% empty %}
-            <tr><td colspan="4">No services added yet.</td></tr>
+            <tr>
+                <td colspan="4" class="text-center text-muted">No services added yet.</td>
+            </tr>
             {% endfor %}
         </tbody>
     </table>
 
-    <!-- 🆕 Customer Bookings Section -->
+    <!-- ===============================
+         Customer Bookings Section
+    ================================ -->
     <hr class="my-4">
     <h3>Customer Bookings</h3>
 
-    {% if garage.bookings.all %}
-        <table class="table table-bordered">
+    {% if garage.bookings.exists %}
+        <table class="table table-bordered align-middle">
             <thead class="table-light">
                 <tr>
                     <th>Booking ID</th>
@@ -60,22 +66,34 @@
             </thead>
             <tbody>
                 {% for booking in garage.bookings.all %}
-                    <tr>
-                        <td>{{ booking.booking_id }}</td>
-                        <td>{{ booking.customer.username }}</td>
-                        <td>{{ booking.vehicle.brand }} {{ booking.vehicle.model }}</td>
-                        <td>{{ booking.appointment_date }}</td>
-                        <td>
-                            <ul class="mb-0">
-                                {% for s in booking.services.all %}
-                                    <li>{{ s.name }}</li>
-                                {% endfor %}
-                            </ul>
-                        </td>
-                        <td>{{ booking.status }}</td>
-                    </tr>
+                <tr>
+                    <td>{{ booking.booking_id }}</td>
+                    <td>{{ booking.customer.username }}</td>
+                    <td>{{ booking.vehicle.brand }} {{ booking.vehicle.model }}</td>
+                    <td>{{ booking.appointment_date }}</td>
+                    <td>
+                        <ul class="mb-0 ps-3">
+                            {% for s in booking.services.all %}
+                                <li>{{ s.name }}</li>
+                            {% empty %}
+                                <li class="text-muted">No services selected</li>
+                            {% endfor %}
+                        </ul>
+                    </td>
+                    <td>
+                        <span class="badge 
+                            {% if booking.status == 'Completed' %}bg-success
+                            {% elif booking.status == 'Pending' %}bg-warning
+                            {% elif booking.status == 'Cancelled' %}bg-danger
+                            {% else %}bg-info{% endif %}">
+                            {{ booking.status }}
+                        </span>
+                    </td>
+                </tr>
                 {% empty %}
-                    <tr><td colspan="6" class="text-center text-muted">No bookings yet.</td></tr>
+                <tr>
+                    <td colspan="6" class="text-center text-muted">No bookings yet.</td>
+                </tr>
                 {% endfor %}
             </tbody>
         </table>
