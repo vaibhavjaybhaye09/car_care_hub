@@ -4,12 +4,13 @@ from django.contrib import messages
 from django.core.mail import send_mail
 from django.conf import settings
 from django.http import FileResponse
+from .models import Booking
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
 import os
 
 
-from .models import Booking
+
 
 from .models import Booking, Invoice
 from .forms import BookingForm
