@@ -58,7 +58,7 @@ class Review(models.Model):
     customer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reviews')
     garage = models.ForeignKey(Garage, on_delete=models.CASCADE, related_name='reviews')
     # booking = models.ForeignKey(Booking, on_delete=models.SET_NULL, null=True, blank=True)
-    booking = models.ForeignKey('bookings.Booking', on_delete=models.SET_NULL, null=True, blank=True)
+    # booking = models.ForeignKey('bookings.Booking', on_delete=models.SET_NULL, null=True, blank=True)
     booking = models.ForeignKey('bookings.Booking', on_delete=models.SET_NULL, null=True, blank=True)  # ✅ fixed here
     rating = models.PositiveIntegerField(default=5)
     comment = models.TextField(blank=True)
