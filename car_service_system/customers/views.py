@@ -133,8 +133,12 @@ def booking_history(request):
 @login_required
 def add_review(request, garage_id):
     garage = get_object_or_404(Garage, id=garage_id)
+    
+    # Check if the user already submitted a review
+    existing_review = Review.objects.filter(customer=request.user, garage=garage).first()
+    
     if request.method == 'POST':
-        form = ReviewForm(request.POST)
+        form = ReviewForm(request.POST, instance=existing_review)  # update if exists
         if form.is_valid():
             review = form.save(commit=False)
             review.customer = request.user
@@ -143,7 +147,8 @@ def add_review(request, garage_id):
             messages.success(request, 'Thank you for your feedback!')
             return redirect('customers:garage_detail', garage_id=garage.id)
     else:
-        form = ReviewForm()
+        form = ReviewForm(instance=existing_review)
+    
     return render(request, 'customers/add_review.html', {'form': form, 'garage': garage})
 
 

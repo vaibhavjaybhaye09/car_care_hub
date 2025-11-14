@@ -11,7 +11,7 @@
       <p><strong>Rating:</strong> ⭐ {{ garage.rating|default:"N/A" }}</p>
 
       <div class="mt-3">
-        <a href="{% url 'bookings:book_service_garage' garage.id %}" class="btn btn-success me-2">
+        <a href="{% url 'bookings:book_service' garage.id %}" class="btn btn-success me-2">
           <i class="bi bi-calendar-check"></i> Book Now
         </a>
         <a href="{% url 'customers:add_review' garage.id %}" class="btn btn-outline-primary">

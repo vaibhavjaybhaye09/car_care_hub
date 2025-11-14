@@ -1,34 +1,90 @@
 {% extends 'base.html' %}
-{% block title %}Add Review{% endblock %}
-{% block content %}
-<div class="container col-md-6 mt-5">
-  <div class="card shadow-sm border-0">
-    <div class="card-header bg-primary text-white">
-      <h5 class="mb-0"><i class="bi bi-chat-square-text"></i> Add Review for {{ garage.name }}</h5>
-    </div>
-    <div class="card-body">
-      <form method="POST">
-        {% csrf_token %}
-        {% for field in form %}
-        <div class="mb-3">
-          <label class="form-label">{{ field.label }}</label>
-          {{ field }}
-          {% if field.errors %}
-          <div class="text-danger small mt-1">{{ field.errors|striptags }}</div>
-          {% endif %}
-        </div>
-        {% endfor %}
 
-        <div class="text-end mt-3">
-          <button type="submit" class="btn btn-success">
-            <i class="bi bi-send"></i> Submit Review
-          </button>
-          <a href="{% url 'customers:garage_detail' garage.id %}" class="btn btn-outline-secondary ms-2">
-            <i class="bi bi-x-circle"></i> Cancel
-          </a>
+{% block title %}Add Review - {{ garage.name }}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+
+            <!-- Page Header -->
+            <div class="text-center mb-4">
+                <h2 class="text-primary fw-bold">Add Review</h2>
+                <p class="text-muted">Share your experience with <strong>{{ garage.name }}</strong></p>
+            </div>
+
+            <!-- Review Form Card -->
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <form method="post" novalidate>
+                        {% csrf_token %}
+
+                        <!-- Rating Field -->
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">{{ form.rating.label }}</label>
+                            <div class="d-flex gap-3">
+                                {% for radio in form.rating %}
+                                    <div class="form-check form-check-inline">
+                                        {{ radio.tag }}
+                                        <label class="form-check-label">{{ radio.choice_label }}</label>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            {% if form.rating.errors %}
+                                <div class="text-danger small mt-1">{{ form.rating.errors|join:", " }}</div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Comment Field -->
+                        <div class="mb-3">
+                            <label for="{{ form.comment.id_for_label }}" class="form-label fw-semibold">
+                                {{ form.comment.label }} <span class="text-muted">(Optional)</span>
+                            </label>
+                            {{ form.comment }}
+                            {% if form.comment.errors %}
+                                <div class="text-danger small mt-1">{{ form.comment.errors|join:", " }}</div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Submit & Cancel Buttons -->
+                        <div class="d-flex justify-content-end gap-2">
+                            <a href="{% url 'customers:garage_detail' garage.id %}" class="btn btn-outline-secondary">
+                                Cancel
+                            </a>
+                            <button type="submit" class="btn btn-primary">Submit Review</button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+
+            <!-- Messages -->
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+
         </div>
-      </form>
     </div>
-  </div>
 </div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .form-check-input {
+        margin-top: 0.3rem;
+        cursor: pointer;
+    }
+    .form-check-label {
+        cursor: pointer;
+    }
+    .btn-primary:hover {
+        background-color: #0b5ed7;
+        border-color: #0a58ca;
+    }
+</style>
 {% endblock %}
