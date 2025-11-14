@@ -16,6 +16,8 @@ class CustomerProfile(models.Model):
     pincode = models.CharField(max_length=10, blank=True)
     profile_image = models.ImageField(upload_to='customers/', blank=True, null=True)
     date_of_birth = models.DateField(blank=True, null=True)
+    booking = models.ForeignKey('bookings.Booking', on_delete=models.SET_NULL, null=True, blank=True)
+
     gender = models.CharField(
         max_length=10,
         choices=[('Male', 'Male'), ('Female', 'Female'), ('Other', 'Other')],

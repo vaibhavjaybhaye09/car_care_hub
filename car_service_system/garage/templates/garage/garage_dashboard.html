@@ -71,15 +71,18 @@
                     <td>{{ booking.customer.username }}</td>
                     <td>{{ booking.vehicle.brand }} {{ booking.vehicle.model }}</td>
                     <td>{{ booking.appointment_date }}</td>
+
+                    <!-- FIXED SERVICES LIST -->
                     <td>
                         <ul class="mb-0 ps-3">
                             {% for s in booking.services.all %}
-                                <li>{{ s.name }}</li>
+                                <li>{{ s.service_type.name }}</li>
                             {% empty %}
                                 <li class="text-muted">No services selected</li>
                             {% endfor %}
                         </ul>
                     </td>
+
                     <td>
                         <span class="badge 
                             {% if booking.status == 'Completed' %}bg-success

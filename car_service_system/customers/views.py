@@ -150,3 +150,4 @@ def add_review(request, garage_id):
 @login_required
 def customers_profile(request):
     return render(request, 'customers/customer_profile.html')
+

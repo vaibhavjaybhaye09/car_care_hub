@@ -122,10 +122,23 @@
   <div class="booking-body">
     <div class="booking-item"><strong>Booking ID:</strong> <span>#{{ booking.booking_id }}</span></div>
     <div class="booking-item"><strong>Garage:</strong> <span>{{ booking.garage.name }}</span></div>
-    <div class="booking-item"><strong>Service:</strong> <span>{{ booking.service.name }}</span></div>
+
+    <!-- ✅ FIXED SERVICES SECTION -->
+    <div class="booking-item">
+      <strong>Services:</strong>
+      <span>
+        {% for s in booking.services.all %}
+          {{ s.service_type.name }} (₹{{ s.price }}){% if not forloop.last %}, {% endif %}
+        {% empty %}
+          No services selected.
+        {% endfor %}
+      </span>
+    </div>
+
     <div class="booking-item"><strong>Vehicle:</strong> <span>{{ booking.vehicle.brand }} {{ booking.vehicle.model }}</span></div>
     <div class="booking-item"><strong>Delivery:</strong> <span>{{ booking.delivery_option }}</span></div>
     <div class="booking-item"><strong>Date:</strong> <span>{{ booking.appointment_date|date:"d M Y" }}</span></div>
+
     {% if booking.remarks %}
       <div class="booking-item"><strong>Remarks:</strong> <span>{{ booking.remarks }}</span></div>
     {% endif %}
@@ -137,10 +150,10 @@
         <i class="bi bi-download"></i> Download Invoice
       </a>
     {% endif %}
+
     <a href="{% url 'bookings:booking_list' %}" class="btn-custom btn-outline-secondary">
       <i class="bi bi-arrow-left"></i> Back
     </a>
   </div>
 </div>
 {% endblock %}
-

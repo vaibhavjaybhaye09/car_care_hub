@@ -16,6 +16,9 @@
       <form method="POST">
         {% csrf_token %}
 
+        <!-- ⭐ REQUIRED FIX → Pass Garage to Form -->
+        {{ form.garage.as_hidden }}
+
         <!-- Vehicle Selection -->
         <div class="mb-3">
           <label class="form-label">{{ form.vehicle.label }}</label>

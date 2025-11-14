@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+
+  <h3>Review for {{ booking.garage.name }}</h3>
+  <hr>
+
+  <form method="POST">
+    {% csrf_token %}
+
+    <label>Rating (1–5):</label>
+    {{ form.rating }}
+
+    <label class="mt-2">Feedback:</label>
+    {{ form.feedback }}
+
+    <button class="btn btn-primary mt-3">Submit Review</button>
+  </form>
+
+</div>
+{% endblock %}
