@@ -1,19 +1,22 @@
 <!DOCTYPE html>
 {% load static %}
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="{% static 'images/logo3.png' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
     <title>{% block title %}Car Care Hub{% endblock %}</title>
-    
+
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
-    
+
     {% block extra_css %}{% endblock %}
-    
+
     <style>
         :root {
             --brand-blue: #667eea;
@@ -275,6 +278,7 @@
                 opacity: 0;
                 transform: translateX(100px);
             }
+
             to {
                 opacity: 1;
                 transform: translateX(0);
@@ -464,6 +468,7 @@
         }
     </style>
 </head>
+
 <body>
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark">
@@ -472,102 +477,112 @@
                 <i class="bi bi-wrench-adjustable-circle"></i>
                 <span>Car Care Hub</span>
             </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}" href="{% url 'accounts:home' %}">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}"
+                            href="{% url 'accounts:home' %}">
                             <i class="bi bi-house-door"></i>
                             <span>Home</span>
                         </a>
                     </li>
-                    
-                    {% if user.is_authenticated %}
-                        {% if user.role == 'customer' %}
-                            <li class="nav-item">
-                                <a class="nav-link {% if 'dashboard' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'customers:dashboard' %}">
-                                    <i class="bi bi-speedometer2"></i>
-                                    <span>Dashboard</span>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link {% if 'search' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'customers:search_garages' %}">
-                                    <i class="bi bi-search"></i>
-                                    <span>Search Garages</span>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link {% if 'booking' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'customers:booking_history' %}">
-                                    <i class="bi bi-calendar-check"></i>
-                                    <span>My Bookings</span>
-                                </a>
-                            </li>
-                        {% elif user.role == 'garage' %}
-                            <li class="nav-item">
-                                <a class="nav-link {% if 'garage_dashboard' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'garage_dashboard' %}">
-                                    <i class="bi bi-speedometer2"></i>
-                                    <span>Dashboard</span>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link {% if 'garage_profile' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'garage_profile' %}">
-                                    <i class="bi bi-building"></i>
-                                    <span>Profile</span>
-                                </a>
-                            </li>
-                                <li class="nav-item">
-        <a class="nav-link" href="{% url 'garage_bookings' %}">
-            <i class="bi bi-list-check"></i> Bookings
-        </a>
-    </li>
 
-                        {% endif %}
-                        
-                        <li class="nav-item dropdown user-dropdown">
-                            <a class="nav-link user-menu-toggle dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <div class="user-avatar">
-                                    {{ user.username|first|upper }}
-                                </div>
-                                <span>{{ user.username }}</span>
-                                <i class="bi bi-chevron-down"></i>
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                                <li>
-                                    <a class="dropdown-item" href="{% url 'accounts:change_password' %}">
-                                        <i class="bi bi-key"></i>
-                                        <span>Change Password</span>
-                                    </a>
-                                </li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li>
-                                    <a class="dropdown-item" href="{% url 'accounts:custom_logout' %}">
-                                        <i class="bi bi-box-arrow-right"></i>
-                                        <span>Logout</span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
+                    {% if user.is_authenticated %}
+                    {% if user.role == 'customer' %}
+                    <li class="nav-item">
+                        <a class="nav-link {% if 'dashboard' in request.resolver_match.url_name %}active{% endif %}"
+                            href="{% url 'customers:dashboard' %}">
+                            <i class="bi bi-speedometer2"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if 'search' in request.resolver_match.url_name %}active{% endif %}"
+                            href="{% url 'customers:search_garages' %}">
+                            <i class="bi bi-search"></i>
+                            <span>Search Garages</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if 'booking' in request.resolver_match.url_name %}active{% endif %}"
+                            href="{% url 'customers:booking_history' %}">
+                            <i class="bi bi-calendar-check"></i>
+                            <span>My Bookings</span>
+                        </a>
+                    </li>
+                    {% elif user.role == 'garage' %}
+                    <li class="nav-item">
+                        <a class="nav-link {% if 'garage_dashboard' in request.resolver_match.url_name %}active{% endif %}"
+                            href="{% url 'garage_dashboard' %}">
+                            <i class="bi bi-speedometer2"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if 'garage_profile' in request.resolver_match.url_name %}active{% endif %}"
+                            href="{% url 'garage_profile' %}">
+                            <i class="bi bi-building"></i>
+                            <span>Profile</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'garage_bookings' %}">
+                            <i class="bi bi-list-check"></i> Bookings
+                        </a>
+                    </li>
+
+                    {% endif %}
+
+                    <li class="nav-item dropdown user-dropdown">
+                        <a class="nav-link user-menu-toggle dropdown-toggle" href="#" id="userDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            <div class="user-avatar">
+                                {{ user.username|first|upper }}
+                            </div>
+                            <span>{{ user.username }}</span>
+                            <i class="bi bi-chevron-down"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                            <li>
+                                <a class="dropdown-item" href="{% url 'accounts:change_password' %}">
+                                    <i class="bi bi-key"></i>
+                                    <span>Change Password</span>
+                                </a>
+                            </li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{% url 'accounts:custom_logout' %}">
+                                    <i class="bi bi-box-arrow-right"></i>
+                                    <span>Logout</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
                     {% else %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'accounts:home' %}#about">
-                                <i class="bi bi-info-circle"></i>
-                                <span>About Us</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'accounts:user_login' %}">
-                                <i class="bi bi-box-arrow-in-right"></i>
-                                <span>Login</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link nav-btn nav-btn-primary" href="{% url 'accounts:signup' %}">
-                                <i class="bi bi-person-plus"></i>
-                                <span>Sign Up</span>
-                            </a>
-                        </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'accounts:home' %}#about">
+                            <i class="bi bi-info-circle"></i>
+                            <span>About Us</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'accounts:user_login' %}">
+                            <i class="bi bi-box-arrow-in-right"></i>
+                            <span>Login</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link nav-btn nav-btn-primary" href="{% url 'accounts:signup' %}">
+                            <i class="bi bi-person-plus"></i>
+                            <span>Sign Up</span>
+                        </a>
+                    </li>
                     {% endif %}
                 </ul>
             </div>
@@ -576,25 +591,25 @@
 
     <!-- Messages -->
     {% if messages %}
-        <div class="messages-container">
-            {% for message in messages %}
-                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-                    <strong>
-                        {% if message.tags == 'error' %}
-                            <i class="bi bi-exclamation-triangle-fill"></i> Error:
-                        {% elif message.tags == 'success' %}
-                            <i class="bi bi-check-circle-fill"></i> Success:
-                        {% elif message.tags == 'warning' %}
-                            <i class="bi bi-exclamation-circle-fill"></i> Warning:
-                        {% else %}
-                            <i class="bi bi-info-circle-fill"></i> Info:
-                        {% endif %}
-                    </strong>
-                    {{ message }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            {% endfor %}
+    <div class="messages-container">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            <strong>
+                {% if message.tags == 'error' %}
+                <i class="bi bi-exclamation-triangle-fill"></i> Error:
+                {% elif message.tags == 'success' %}
+                <i class="bi bi-check-circle-fill"></i> Success:
+                {% elif message.tags == 'warning' %}
+                <i class="bi bi-exclamation-circle-fill"></i> Warning:
+                {% else %}
+                <i class="bi bi-info-circle-fill"></i> Info:
+                {% endif %}
+            </strong>
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
+        {% endfor %}
+    </div>
     {% endif %}
 
     <!-- Main Content -->
@@ -609,7 +624,8 @@
                 <!-- About Section -->
                 <div class="col-md-4 col-lg-3">
                     <h5>Car Care Hub</h5>
-                    <p>Your trusted partner for car service and maintenance. Book services easily and manage your vehicle maintenance with our modern platform.</p>
+                    <p>Your trusted partner for car service and maintenance. Book services easily and manage your
+                        vehicle maintenance with our modern platform.</p>
                     <div class="social-icons">
                         <a href="#" class="social-icon" aria-label="Facebook">
                             <i class="bi bi-facebook"></i>
@@ -632,16 +648,19 @@
                     <ul class="footer-links">
                         <li><a href="{% url 'accounts:home' %}"><i class="bi bi-chevron-right"></i> Home</a></li>
                         {% if user.is_authenticated %}
-                            {% if user.role == 'customer' %}
-                                <li><a href="{% url 'customers:dashboard' %}"><i class="bi bi-chevron-right"></i> Dashboard</a></li>
-                                <li><a href="{% url 'customers:search_garages' %}"><i class="bi bi-chevron-right"></i> Search Garages</a></li>
-                            {% elif user.role == 'garage' %}
-                                <li><a href="{% url 'garage_dashboard' %}"><i class="bi bi-chevron-right"></i> Dashboard</a></li>
-                                <li><a href="{% url 'garage_profile' %}"><i class="bi bi-chevron-right"></i> Profile</a></li>
-                            {% endif %}
+                        {% if user.role == 'customer' %}
+                        <li><a href="{% url 'customers:dashboard' %}"><i class="bi bi-chevron-right"></i> Dashboard</a>
+                        </li>
+                        <li><a href="{% url 'customers:search_garages' %}"><i class="bi bi-chevron-right"></i> Search
+                                Garages</a></li>
+                        {% elif user.role == 'garage' %}
+                        <li><a href="{% url 'garage_dashboard' %}"><i class="bi bi-chevron-right"></i> Dashboard</a>
+                        </li>
+                        <li><a href="{% url 'garage_profile' %}"><i class="bi bi-chevron-right"></i> Profile</a></li>
+                        {% endif %}
                         {% else %}
-                            <li><a href="{% url 'accounts:user_login' %}"><i class="bi bi-chevron-right"></i> Login</a></li>
-                            <li><a href="{% url 'accounts:signup' %}"><i class="bi bi-chevron-right"></i> Sign Up</a></li>
+                        <li><a href="{% url 'accounts:user_login' %}"><i class="bi bi-chevron-right"></i> Login</a></li>
+                        <li><a href="{% url 'accounts:signup' %}"><i class="bi bi-chevron-right"></i> Sign Up</a></li>
                         {% endif %}
                     </ul>
                 </div>
@@ -688,7 +707,8 @@
             </div>
 
             <div class="footer-bottom">
-                <p>&copy; 2024 Car Care Hub. All rights reserved. | Designed with <i class="bi bi-heart-fill" style="color: #e74c3c;"></i> for car owners</p>
+                <p>&copy; 2024 Car Care Hub. All rights reserved. | Designed with <i class="bi bi-heart-fill"
+                        style="color: #e74c3c;"></i> for car owners</p>
             </div>
         </div>
     </footer>
@@ -700,11 +720,11 @@
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    
+
     <!-- Custom JavaScript -->
     <script>
         // Navbar scroll effect
-        window.addEventListener('scroll', function() {
+        window.addEventListener('scroll', function () {
             const navbar = document.querySelector('.navbar');
             if (window.scrollY > 50) {
                 navbar.classList.add('scrolled');
@@ -715,8 +735,8 @@
 
         // Scroll to top button
         const scrollToTopBtn = document.getElementById('scrollToTop');
-        
-        window.addEventListener('scroll', function() {
+
+        window.addEventListener('scroll', function () {
             if (window.pageYOffset > 300) {
                 scrollToTopBtn.classList.add('show');
             } else {
@@ -724,7 +744,7 @@
             }
         });
 
-        scrollToTopBtn.addEventListener('click', function() {
+        scrollToTopBtn.addEventListener('click', function () {
             window.scrollTo({
                 top: 0,
                 behavior: 'smooth'
@@ -766,7 +786,8 @@
             });
         });
     </script>
-    
+
     {% block extra_js %}{% endblock %}
 </body>
+
 </html>
