@@ -7,10 +7,10 @@
     <h2>Welcome, {{ request.user.username }}</h2>
 
     {% if garage %}
-        <p><strong>Garage:</strong> {{ garage.name }} ({{ garage.city }})</p>
-        <a href="{% url 'garage_profile' %}" class="btn btn-secondary mb-3">Edit Profile</a>
+    <p><strong>Garage:</strong> {{ garage.name }} ({{ garage.city }})</p>
+    <a href="{% url 'garage_profile' %}" class="btn btn-secondary mb-3">Edit Profile</a>
     {% else %}
-        <a href="{% url 'garage_profile' %}" class="btn btn-primary mb-3">Create Garage Profile</a>
+    <a href="{% url 'garage_profile' %}" class="btn btn-primary mb-3">Create Garage Profile</a>
     {% endif %}
 
     <!-- ===============================
@@ -53,55 +53,103 @@
     <h3>Customer Bookings</h3>
 
     {% if garage.bookings.exists %}
-        <table class="table table-bordered align-middle">
-            <thead class="table-light">
-                <tr>
-                    <th>Booking ID</th>
-                    <th>Customer</th>
-                    <th>Vehicle</th>
-                    <th>Appointment Date</th>
-                    <th>Services Selected</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for booking in garage.bookings.all %}
-                <tr>
-                    <td>{{ booking.booking_id }}</td>
-                    <td>{{ booking.customer.username }}</td>
-                    <td>{{ booking.vehicle.brand }} {{ booking.vehicle.model }}</td>
-                    <td>{{ booking.appointment_date }}</td>
+    <table class="table table-bordered align-middle">
+        <thead class="table-light">
+            <tr>
+                <th>Booking ID</th>
+                <th>Customer</th>
+                <th>Vehicle</th>
+                <th>Appointment Date</th>
+                <th>Services Selected</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for booking in garage.bookings.all %}
+            <tr>
+                <td>{{ booking.booking_id }}</td>
+                <td>{{ booking.customer.username }}</td>
+                <td>{{ booking.vehicle.brand }} {{ booking.vehicle.model }}</td>
+                <td>{{ booking.appointment_date }}</td>
 
-                    <!-- FIXED SERVICES LIST -->
-                    <td>
-                        <ul class="mb-0 ps-3">
-                            {% for s in booking.services.all %}
-                                <li>{{ s.service_type.name }}</li>
-                            {% empty %}
-                                <li class="text-muted">No services selected</li>
-                            {% endfor %}
-                        </ul>
-                    </td>
+                <!-- FIXED SERVICES LIST -->
+                <td>
+                    <ul class="mb-0 ps-3">
+                        {% for s in booking.services.all %}
+                        <li>{{ s.service_type.name }}</li>
+                        {% empty %}
+                        <li class="text-muted">No services selected</li>
+                        {% endfor %}
+                    </ul>
+                </td>
 
-                    <td>
-                        <span class="badge 
+                <td>
+                    <span class="badge 
                             {% if booking.status == 'Completed' %}bg-success
                             {% elif booking.status == 'Pending' %}bg-warning
                             {% elif booking.status == 'Cancelled' %}bg-danger
                             {% else %}bg-info{% endif %}">
-                            {{ booking.status }}
-                        </span>
-                    </td>
-                </tr>
-                {% empty %}
-                <tr>
-                    <td colspan="6" class="text-center text-muted">No bookings yet.</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+                        {{ booking.status }}
+                    </span>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6" class="text-center text-muted">No bookings yet.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
     {% else %}
-        <p class="text-muted">No bookings yet.</p>
+    <p class="text-muted">No bookings yet.</p>
     {% endif %}
-</div>
+
+    <!-- ===============================
+    <!-- Customer Reviews Section -->
+    <div class="mt-4">
+        <h4>
+            Average Rating:
+            <strong>{{ avg_rating }}/5</strong>
+
+            <!-- ⭐ AVG STARS -->
+            {% for i in "12345" %}
+            {% if forloop.counter <= avg_rating %} <i class="fas fa-star text-warning"></i>
+                {% else %}
+                <i class="far fa-star text-warning"></i>
+                {% endif %}
+                {% endfor %}
+        </h4>
+
+        <h5 class="mt-3">Customer Reviews</h5>
+
+        {% if reviews %}
+        <ul class="list-group">
+            {% for review in reviews %}
+            <li class="list-group-item">
+
+                <strong>{{ review.customer.username }}</strong>
+
+                - Rating: {{ review.rating }}/5
+
+                <!-- ⭐ INDIVIDUAL STARS -->
+                <br>
+                {% for i in "12345" %}
+                {% if forloop.counter <= review.rating %} <i class="fas fa-star text-warning"></i>
+                    {% else %}
+                    <i class="far fa-star text-warning"></i>
+                    {% endif %}
+                    {% endfor %}
+
+                    <p>{{ review.comment|linebreaks }}</p>
+                    <small class="text-muted">{{ review.date|date:"d M Y H:i" }}</small>
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p>No reviews yet.</p>
+        {% endif %}
+    </div>
+
+
+
 {% endblock %}
