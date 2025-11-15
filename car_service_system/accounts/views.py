@@ -92,7 +92,7 @@ def redirect_after_login(request):    # If user picked a role on login, honor it
 
 def custom_logout(request):
     logout(request)
-    messages.success(request, 'Nikkall jaldii yhasee.')
+    messages.success(request, 'Logout Successful.')
     return redirect('/')
 
 @login_required
