@@ -1,0 +1,47 @@
+<!-- Sidebar Component -->
+<aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+        <i class="bi bi-wrench-adjustable-circle"></i>
+        <h3>Car Care Hub</h3>
+    </div>
+    <nav class="sidebar-menu">
+        <a href="{% url 'customers:dashboard' %}" class="menu-item {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+            <i class="bi bi-speedometer2"></i>
+            <span>Dashboard</span>
+        </a>
+        <a href="{% url 'customers:add_vehicle' %}" class="menu-item {% if 'add_vehicle' in request.resolver_match.url_name or 'edit_vehicle' in request.resolver_match.url_name or 'delete_vehicle' in request.resolver_match.url_name %}active{% endif %}">
+            <i class="bi bi-plus-circle"></i>
+            <span>Add Vehicle</span>
+        </a>
+        <a href="{% url 'customers:search_garages' %}" class="menu-item {% if 'search' in request.resolver_match.url_name or 'garage_detail' in request.resolver_match.url_name or 'add_review' in request.resolver_match.url_name %}active{% endif %}">
+            <i class="bi bi-search"></i>
+            <span>Search Garages</span>
+        </a>
+        <a href="{% url 'customers:booking_history' %}" class="menu-item {% if 'booking_history' in request.resolver_match.url_name %}active{% endif %}">
+            <i class="bi bi-calendar-check"></i>
+            <span>My Bookings</span>
+        </a>
+        <a href="{% url 'customers:customer_profile' %}" class="menu-item {% if 'customer_profile' in request.resolver_match.url_name %}active{% endif %}">
+            <i class="bi bi-person-circle"></i>
+            <span>My Profile</span>
+        </a>
+        <div class="menu-divider"></div>
+        <a href="{% url 'accounts:home' %}" class="menu-item">
+            <i class="bi bi-house"></i>
+            <span>Home</span>
+        </a>
+    </nav>
+    <div class="user-section">
+        <div class="user-info">
+            <div class="user-avatar">{{ user.username|first|upper }}</div>
+            <div class="user-details">
+                <h5>{{ user.get_full_name|default:user.username }}</h5>
+                <p>{{ user.email }}</p>
+            </div>
+        </div>
+        <a href="{% url 'accounts:custom_logout' %}" class="logout-btn">
+            <i class="bi bi-box-arrow-right"></i>
+            <span>Logout</span>
+        </a>
+    </div>
+</aside>

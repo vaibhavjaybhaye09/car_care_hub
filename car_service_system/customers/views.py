@@ -154,5 +154,8 @@ def add_review(request, garage_id):
 
 @login_required
 def customers_profile(request):
-    return render(request, 'customers/customer_profile.html')
+    completed_bookings = Booking.objects.filter(customer=request.user, status='Completed').count()
+    return render(request, 'customers/customer_profile.html', {
+        'completed_bookings': completed_bookings
+    })
 

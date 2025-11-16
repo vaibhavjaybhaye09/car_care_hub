@@ -1,76 +1,277 @@
-{% extends 'base.html' %}
-{% block title %}My Booking History{% endblock %}
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Booking History - Car Care Hub</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f1f5f9; overflow-x: hidden; }
+        .wrapper { display: flex; min-height: 100vh; }
+        
+        /* Sidebar */
+        .sidebar { width: 280px; background: linear-gradient(180deg, #1e3a8a 0%, #1e40af 100%); color: white; position: fixed; height: 100vh; overflow-y: auto; transition: all 0.3s ease; z-index: 1000; box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1); }
+        .sidebar-header { padding: 25px 20px; border-bottom: 1px solid rgba(255, 255, 255, 0.1); display: flex; align-items: center; gap: 12px; }
+        .sidebar-header i { font-size: 2rem; color: #ffd700; }
+        .sidebar-header h3 { font-size: 1.3rem; font-weight: 700; margin: 0; }
+        .sidebar-menu { padding: 20px 0; }
+        .menu-item { display: flex; align-items: center; gap: 12px; padding: 14px 20px; color: rgba(255, 255, 255, 0.9); text-decoration: none; transition: all 0.3s ease; border-left: 3px solid transparent; }
+        .menu-item:hover, .menu-item.active { background: rgba(255, 255, 255, 0.1); border-left-color: #ffd700; color: white; transform: translateX(5px); }
+        .menu-item i { font-size: 1.2rem; width: 24px; }
+        .menu-divider { height: 1px; background: rgba(255, 255, 255, 0.1); margin: 10px 20px; }
+        .user-section { padding: 20px; border-top: 1px solid rgba(255, 255, 255, 0.1); margin-top: auto; }
+        .user-info { display: flex; align-items: center; gap: 12px; margin-bottom: 15px; }
+        .user-avatar { width: 45px; height: 45px; border-radius: 50%; background: linear-gradient(135deg, #ffd700, #ffed4e); display: flex; align-items: center; justify-content: center; font-weight: 700; color: #1e3a8a; font-size: 1.2rem; }
+        .user-details h5 { font-size: 0.95rem; margin: 0; font-weight: 600; }
+        .user-details p { font-size: 0.8rem; margin: 0; opacity: 0.8; }
+        .logout-btn { width: 100%; padding: 10px; background: rgba(220, 38, 38, 0.2); border: 1px solid rgba(220, 38, 38, 0.3); color: white; border-radius: 8px; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.3s ease; }
+        .logout-btn:hover { background: rgba(220, 38, 38, 0.3); color: white; }
+        
+        /* Main Content */
+        .main-content { flex: 1; margin-left: 280px; padding: 30px; transition: all 0.3s ease; }
+        .menu-toggle { display: none; position: fixed; top: 20px; left: 20px; z-index: 1001; background: #667eea; color: white; border: none; padding: 10px 15px; border-radius: 8px; font-size: 1.5rem; cursor: pointer; }
+        
+        .page-header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 20px; padding: 30px 40px; color: white; margin-bottom: 30px; box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3); }
+        .page-header h1 { font-size: 2rem; font-weight: 700; margin: 0; display: flex; align-items: center; gap: 15px; }
+        .page-header p { margin: 10px 0 0 0; opacity: 0.95; font-size: 1.1rem; }
+        
+        .bookings-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 25px; margin-bottom: 30px; }
+        .booking-card { background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08); transition: all 0.3s ease; border-top: 4px solid #667eea; display: flex; flex-direction: column; }
+        .booking-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15); }
+        .booking-card-header { background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); padding: 20px; border-bottom: 1px solid #e2e8f0; }
+        .booking-id { font-size: 1.1rem; font-weight: 700; color: #1e3a8a; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+        .booking-date { font-size: 0.9rem; color: #64748b; display: flex; align-items: center; gap: 6px; }
+        .booking-card-body { padding: 20px; flex: 1; }
+        .booking-info-item { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid #f1f5f9; }
+        .booking-info-item:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+        .info-icon { width: 36px; height: 36px; border-radius: 8px; background: linear-gradient(135deg, #667eea, #764ba2); display: flex; align-items: center; justify-content: center; color: white; font-size: 1rem; flex-shrink: 0; }
+        .info-content { flex: 1; }
+        .info-label { font-size: 0.8rem; color: #64748b; margin-bottom: 4px; font-weight: 500; }
+        .info-value { font-size: 0.95rem; color: #1e3a8a; font-weight: 600; line-height: 1.4; }
+        .services-list { list-style: none; padding: 0; margin: 0; }
+        .services-list li { padding: 6px 0; color: #475569; font-size: 0.9rem; display: flex; align-items: center; gap: 8px; }
+        .services-list li::before { content: '✓'; color: #16a34a; font-weight: 700; }
+        .status-badge { display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; text-transform: capitalize; }
+        .status-pending { background: #fef3c7; color: #92400e; }
+        .status-in-service { background: #dbeafe; color: #1e3a8a; }
+        .status-ready { background: #d1fae5; color: #065f46; }
+        .status-completed { background: #d1fae5; color: #065f46; }
+        .status-cancelled { background: #fee2e2; color: #991b1b; }
+        .booking-card-footer { padding: 20px; background: #f8fafc; border-top: 1px solid #e2e8f0; display: flex; gap: 10px; flex-wrap: wrap; }
+        .btn-booking { padding: 10px 18px; border-radius: 8px; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; transition: all 0.3s ease; font-size: 0.9rem; border: none; cursor: pointer; }
+        .btn-view { background: linear-gradient(135deg, #667eea, #764ba2); color: white; flex: 1; justify-content: center; }
+        .btn-view:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4); color: white; }
+        .btn-invoice { background: #16a34a; color: white; }
+        .btn-invoice:hover { background: #15803d; color: white; transform: translateY(-2px); }
+        .empty-state { text-align: center; padding: 80px 20px; background: white; border-radius: 15px; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08); }
+        .empty-state-icon { font-size: 5rem; color: #cbd5e1; margin-bottom: 20px; }
+        .empty-state h3 { color: #475569; font-size: 1.5rem; margin-bottom: 10px; }
+        .empty-state p { color: #64748b; font-size: 1rem; margin-bottom: 30px; }
+        .btn-primary-large { background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 14px 28px; border-radius: 10px; text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; transition: all 0.3s ease; }
+        .btn-primary-large:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4); color: white; }
+        
+        @media (max-width: 768px) {
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .main-content { margin-left: 0; padding: 20px 15px; }
+            .menu-toggle { display: block; }
+            .bookings-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <i class="bi bi-wrench-adjustable-circle"></i>
+                <h3>Car Care Hub</h3>
+            </div>
+            <nav class="sidebar-menu">
+                <a href="{% url 'customers:dashboard' %}" class="menu-item">
+                    <i class="bi bi-speedometer2"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="{% url 'customers:add_vehicle' %}" class="menu-item">
+                    <i class="bi bi-plus-circle"></i>
+                    <span>Add Vehicle</span>
+                </a>
+                <a href="{% url 'customers:search_garages' %}" class="menu-item">
+                    <i class="bi bi-search"></i>
+                    <span>Search Garages</span>
+                </a>
+                <a href="{% url 'customers:booking_history' %}" class="menu-item active">
+                    <i class="bi bi-calendar-check"></i>
+                    <span>My Bookings</span>
+                </a>
+                <a href="{% url 'customers:customer_profile' %}" class="menu-item">
+                    <i class="bi bi-person-circle"></i>
+                    <span>My Profile</span>
+                </a>
+                <div class="menu-divider"></div>
+                <a href="{% url 'accounts:home' %}" class="menu-item">
+                    <i class="bi bi-house"></i>
+                    <span>Home</span>
+                </a>
+            </nav>
+            <div class="user-section">
+                <div class="user-info">
+                    <div class="user-avatar">{{ user.username|first|upper }}</div>
+                    <div class="user-details">
+                        <h5>{{ user.get_full_name|default:user.username }}</h5>
+                        <p>{{ user.email }}</p>
+                    </div>
+                </div>
+                <a href="{% url 'accounts:custom_logout' %}" class="logout-btn">
+                    <i class="bi bi-box-arrow-right"></i>
+                    <span>Logout</span>
+                </a>
+            </div>
+        </aside>
 
-{% block content %}
-<div class="container mt-4">
-  <h3 class="mb-3"><i class="bi bi-clock-history"></i> My Booking History</h3>
+        <!-- Main Content -->
+        <main class="main-content">
+            <button class="menu-toggle" onclick="toggleSidebar()">
+                <i class="bi bi-list"></i>
+            </button>
 
-  {% if bookings %}
-  <table class="table table-striped table-bordered align-middle mt-3">
-    <thead class="table-light">
-      <tr>
-        <th>Booking ID</th>
-        <th>Garage</th>
-        <th>Services</th>
-        <th>Vehicle</th>
-        <th>Status</th>
-        <th>Date</th>
-        <th>Invoice</th>
-        <th>Action</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for b in bookings %}
-      <tr>
-        <td>{{ b.booking_id }}</td>
-        <td>{{ b.garage.name }}</td>
+            <div class="page-header">
+                <h1>
+                    <i class="bi bi-clock-history"></i>
+                    My Booking History
+                </h1>
+                <p>View and manage all your service bookings</p>
+            </div>
 
-        <!-- ✅ Multiple services listed -->
-        <td>
-          <ul class="mb-0 ps-3">
-            {% for s in b.services.all %}
-            <li>{{ s.service_type.name }} <span class="text-muted">(₹{{ s.price }})</span></li>
-            {% empty %}
-            <li class="text-muted">No services selected</li>
-            {% endfor %}
-          </ul>
-        </td>
+            {% if bookings %}
+            <div class="bookings-grid">
+                {% for booking in bookings %}
+                <div class="booking-card">
+                    <div class="booking-card-header">
+                        <div class="booking-id">
+                            <i class="bi bi-receipt"></i>
+                            #{{ booking.booking_id }}
+                        </div>
+                        <div class="booking-date">
+                            <i class="bi bi-calendar3"></i>
+                            {{ booking.appointment_date|date:"d M Y" }}
+                        </div>
+                    </div>
+                    <div class="booking-card-body">
+                        <div class="booking-info-item">
+                            <div class="info-icon">
+                                <i class="bi bi-building"></i>
+                            </div>
+                            <div class="info-content">
+                                <div class="info-label">Garage</div>
+                                <div class="info-value">{{ booking.garage.name }}</div>
+                            </div>
+                        </div>
+                        <div class="booking-info-item">
+                            <div class="info-icon">
+                                <i class="bi bi-tools"></i>
+                            </div>
+                            <div class="info-content">
+                                <div class="info-label">Services</div>
+                                <ul class="services-list">
+                                    {% for service in booking.services.all %}
+                                    <li>{{ service.service_type.name }} - ₹{{ service.price }}</li>
+                                    {% empty %}
+                                    <li class="text-muted">No services selected</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="booking-info-item">
+                            <div class="info-icon">
+                                <i class="bi bi-car-front"></i>
+                            </div>
+                            <div class="info-content">
+                                <div class="info-label">Vehicle</div>
+                                <div class="info-value">{{ booking.vehicle.brand }} {{ booking.vehicle.model }}</div>
+                            </div>
+                        </div>
+                        <div class="booking-info-item">
+                            <div class="info-icon">
+                                <i class="bi bi-info-circle"></i>
+                            </div>
+                            <div class="info-content">
+                                <div class="info-label">Status</div>
+                                <span class="status-badge status-{{ booking.status|lower|slugify }}">
+                                    {% if booking.status == 'In Service' %}
+                                    <i class="bi bi-gear"></i>
+                                    {% elif booking.status == 'Completed' %}
+                                    <i class="bi bi-check-circle"></i>
+                                    {% elif booking.status == 'Ready' %}
+                                    <i class="bi bi-check2-circle"></i>
+                                    {% elif booking.status == 'Pending' %}
+                                    <i class="bi bi-clock"></i>
+                                    {% else %}
+                                    <i class="bi bi-x-circle"></i>
+                                    {% endif %}
+                                    {{ booking.status }}
+                                </span>
+                            </div>
+                        </div>
+                        {% if booking.invoice %}
+                        <div class="booking-info-item">
+                            <div class="info-icon">
+                                <i class="bi bi-file-earmark-text"></i>
+                            </div>
+                            <div class="info-content">
+                                <div class="info-label">Invoice Amount</div>
+                                <div class="info-value">₹{{ booking.invoice.amount }}</div>
+                                <small class="text-muted">Generated on {{ booking.invoice.generated_on|date:"d M Y" }}</small>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="booking-card-footer">
+                        <a href="{% url 'bookings:booking_detail' booking.id %}" class="btn-booking btn-view">
+                            <i class="bi bi-eye"></i>
+                            View Details
+                        </a>
+                        {% if booking.invoice %}
+                        <a href="{% url 'bookings:download_invoice' booking.id %}" class="btn-booking btn-invoice">
+                            <i class="bi bi-download"></i>
+                            Invoice
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="empty-state">
+                <i class="bi bi-calendar-x empty-state-icon"></i>
+                <h3>No Bookings Yet</h3>
+                <p>You haven't made any bookings. Start by searching for a garage and booking a service.</p>
+                <a href="{% url 'customers:search_garages' %}" class="btn-primary-large">
+                    <i class="bi bi-search"></i>
+                    Search & Book Service
+                </a>
+            </div>
+            {% endif %}
+        </main>
+    </div>
 
-        <td>{{ b.vehicle.brand }} {{ b.vehicle.model }}</td>
-
-        <td>
-          <span
-            class="badge bg-{% if b.status == 'Completed' %}success{% elif b.status == 'In Service' %}warning{% elif b.status == 'Ready' %}info{% else %}secondary{% endif %}">
-            {{ b.status }}
-          </span>
-        </td>
-
-        <td>{{ b.appointment_date|date:"d M Y" }}</td>
-
-        <!-- ✅ Invoice info -->
-        <td>
-          {% if b.invoice %}
-          <div>
-            <strong>₹{{ b.invoice.amount }}</strong><br>
-            <small class="text-muted">{{ b.invoice.generated_on|date:"d M Y" }}</small>
-          </div>
-          {% else %}
-          <span class="text-muted small">Not generated</span>
-          {% endif %}
-        </td>
-
-        <td>
-          <a href="{% url 'bookings:booking_detail' b.id %}" class="btn btn-sm btn-outline-primary">View</a>
-          {% if b.invoice %}
-          <a href="{% url 'bookings:download_invoice' b.id %}" class="btn btn-sm btn-outline-success">Invoice</a>
-          {% endif %}
-        </td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-  {% else %}
-  <div class="alert alert-secondary mt-3">No bookings found.</div>
-  {% endif %}
-</div>
-{% endblock %}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('active');
+        }
+        document.addEventListener('click', function(event) {
+            const sidebar = document.getElementById('sidebar');
+            const toggle = document.querySelector('.menu-toggle');
+            if (window.innerWidth <= 768) {
+                if (!sidebar.contains(event.target) && !toggle.contains(event.target)) {
+                    sidebar.classList.remove('active');
+                }
+            }
+        });
+    </script>
+</body>
+</html>
