@@ -1,0 +1,116 @@
+[
+  {
+    "model": "garage.servicetype",
+    "pk": 1,
+    "fields": { "name": "General Maintenance", "description": "", "parent": null }
+  },
+  {
+    "model": "garage.servicetype",
+    "pk": 2,
+    "fields": { "name": "Engine Services", "description": "", "parent": null }
+  },
+  {
+    "model": "garage.servicetype",
+    "pk": 3,
+    "fields": { "name": "Brake System Services", "description": "", "parent": null }
+  },
+  {
+    "model": "garage.servicetype",
+    "pk": 4,
+    "fields": { "name": "Transmission & Clutch", "description": "", "parent": null }
+  },
+  {
+    "model": "garage.servicetype",
+    "pk": 5,
+    "fields": { "name": "Suspension & Steering", "description": "", "parent": null }
+  },
+  {
+    "model": "garage.servicetype",
+    "pk": 6,
+    "fields": { "name": "Electrical & Battery", "description": "", "parent": null }
+  },
+  {
+    "model": "garage.servicetype",
+    "pk": 7,
+    "fields": { "name": "Air Conditioning (AC)", "description": "", "parent": null }
+  },
+  {
+    "model": "garage.servicetype",
+    "pk": 8,
+    "fields": { "name": "Tyres & Wheels", "description": "", "parent": null }
+  },
+  {
+    "model": "garage.servicetype",
+    "pk": 9,
+    "fields": { "name": "Body & Paint", "description": "", "parent": null }
+  },
+  {
+    "model": "garage.servicetype",
+    "pk": 10,
+    "fields": { "name": "Car Detailing & Cleaning", "description": "", "parent": null }
+  },
+  {
+    "model": "garage.servicetype",
+    "pk": 11,
+    "fields": { "name": "Inspection & Diagnostic", "description": "", "parent": null }
+  },
+  {
+    "model": "garage.servicetype",
+    "pk": 12,
+    "fields": { "name": "Emergency & On-Road Assistance", "description": "", "parent": null }
+  },
+
+  
+  { "model": "garage.servicetype", "pk": 1, "fields": { "name": "General Maintenance", "description": "", "parent": null } },
+  { "model": "garage.servicetype", "pk": 2, "fields": { "name": "Engine Services", "description": "", "parent": null } },
+  { "model": "garage.servicetype", "pk": 3, "fields": { "name": "Brake System Services", "description": "", "parent": null } },
+  { "model": "garage.servicetype", "pk": 4, "fields": { "name": "Transmission & Clutch", "description": "", "parent": null } },
+  { "model": "garage.servicetype", "pk": 5, "fields": { "name": "Suspension & Steering", "description": "", "parent": null } },
+  { "model": "garage.servicetype", "pk": 6, "fields": { "name": "Electrical & Battery", "description": "", "parent": null } },
+  { "model": "garage.servicetype", "pk": 7, "fields": { "name": "Air Conditioning (AC)", "description": "", "parent": null } },
+  { "model": "garage.servicetype", "pk": 8, "fields": { "name": "Tyres & Wheels", "description": "", "parent": null } },
+  { "model": "garage.servicetype", "pk": 9, "fields": { "name": "Body & Paint", "description": "", "parent": null } },
+  { "model": "garage.servicetype", "pk": 10, "fields": { "name": "Car Detailing & Cleaning", "description": "", "parent": null } },
+  { "model": "garage.servicetype", "pk": 11, "fields": { "name": "Inspection & Diagnostic", "description": "", "parent": null } },
+  { "model": "garage.servicetype", "pk": 12, "fields": { "name": "Emergency & On-Road Assistance", "description": "", "parent": null } },
+
+  { "model": "garage.servicetype", "pk": 101, "fields": { "name": "Oil & Filter Change", "parent": 1 } },
+  { "model": "garage.servicetype", "pk": 102, "fields": { "name": "Coolant Top-Up", "parent": 1 } },
+  { "model": "garage.servicetype", "pk": 103, "fields": { "name": "Windshield Washer Refill", "parent": 1 } },
+  { "model": "garage.servicetype", "pk": 104, "fields": { "name": "Air Filter Replacement", "parent": 1 } },
+  { "model": "garage.servicetype", "pk": 105, "fields": { "name": "Wiper Blade Replacement", "parent": 1 } },
+  { "model": "garage.servicetype", "pk": 106, "fields": { "name": "Spark Plug Replacement", "parent": 1 } },
+
+  { "model": "garage.servicetype", "pk": 201, "fields": { "name": "Engine Diagnostics (OBD Scanning)", "parent": 2 } },
+  { "model": "garage.servicetype", "pk": 202, "fields": { "name": "Engine Overhaul", "parent": 2 } },
+  { "model": "garage.servicetype", "pk": 203, "fields": { "name": "Timing Belt/Chain Replacement", "parent": 2 } },
+  { "model": "garage.servicetype", "pk": 204, "fields": { "name": "Engine Oil Leak Repair", "parent": 2 } },
+  { "model": "garage.servicetype", "pk": 205, "fields": { "name": "Cylinder Head Repair", "parent": 2 } },
+  { "model": "garage.servicetype", "pk": 206, "fields": { "name": "Fuel Injector Cleaning", "parent": 2 } },
+
+  { "model": "garage.servicetype", "pk": 301, "fields": { "name": "Brake Pad Replacement", "parent": 3 } },
+  { "model": "garage.servicetype", "pk": 302, "fields": { "name": "Brake Disc/Drum Replacement", "parent": 3 } },
+  { "model": "garage.servicetype", "pk": 303, "fields": { "name": "Brake Fluid Replacement", "parent": 3 } },
+  { "model": "garage.servicetype", "pk": 304, "fields": { "name": "ABS Diagnostics", "parent": 3 } },
+  { "model": "garage.servicetype", "pk": 305, "fields": { "name": "Handbrake Adjustment", "parent": 3 } },
+
+  { "model": "garage.servicetype", "pk": 401, "fields": { "name": "Manual Clutch Replacement", "parent": 4 } },
+  { "model": "garage.servicetype", "pk": 402, "fields": { "name": "Transmission Fluid Change", "parent": 4 } },
+  { "model": "garage.servicetype", "pk": 403, "fields": { "name": "Gearbox Overhaul", "parent": 4 } },
+  { "model": "garage.servicetype", "pk": 404, "fields": { "name": "Automatic Transmission Service", "parent": 4 } },
+  { "model": "garage.servicetype", "pk": 405, "fields": { "name": "Differential Oil Change", "parent": 4 } },
+
+  { "model": "garage.servicetype", "pk": 501, "fields": { "name": "Shock Absorber Replacement", "parent": 5 } },
+  { "model": "garage.servicetype", "pk": 502, "fields": { "name": "Suspension Bush Replacement", "parent": 5 } },
+  { "model": "garage.servicetype", "pk": 503, "fields": { "name": "Wheel Alignment", "parent": 5 } },
+  { "model": "garage.servicetype", "pk": 504, "fields": { "name": "Power Steering Fluid Change", "parent": 5 } },
+  { "model": "garage.servicetype", "pk": 505, "fields": { "name": "Steering Rack Repair", "parent": 5 } },
+
+  { "model": "garage.servicetype", "pk": 801, "fields": { "name": "Tyre Replacement", "parent": 8 } },
+  { "model": "garage.servicetype", "pk": 802, "fields": { "name": "Tyre Balancing", "parent": 8 } },
+  { "model": "garage.servicetype", "pk": 803, "fields": { "name": "Wheel Alignment (Tyres)", "parent": 8 } },
+  { "model": "garage.servicetype", "pk": 804, "fields": { "name": "Puncture Repair", "parent": 8 } },
+  { "model": "garage.servicetype", "pk": 805, "fields": { "name": "Alloy Wheel Repair", "parent": 8 } }
+
+
+]

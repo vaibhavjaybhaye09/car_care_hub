@@ -18,8 +18,8 @@ class UserProfile(AbstractUser):
     phone = models.CharField(max_length=20, blank=True)
     address = models.TextField(blank=True)
     is_email_verified = models.BooleanField(default=False)
-    otp_code = models.CharField(max_length=6, blank=True, null=True)
-    otp_expires_at = models.DateTimeField(blank=True, null=True)
+    # otp_code = models.CharField(max_length=6, blank=True, null=True)
+    # otp_expires_at = models.DateTimeField(blank=True, null=True)
 
     def __str__(self) -> str:
         return f"{self.username} - {self.get_role_display()}"

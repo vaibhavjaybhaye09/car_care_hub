@@ -54,4 +54,3 @@ class GarageService(models.Model):
         return f"{self.garage.name} - {self.service_type.name if self.service_type else 'Custom'}"
 
 
-# Create your models here.

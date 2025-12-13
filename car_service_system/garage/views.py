@@ -4,6 +4,7 @@ from django.contrib import messages
 from .models import Garage, GarageService, ServiceType
 from .forms import GarageProfileForm, GarageServiceForm, ServiceTypeForm
 from bookings.models import Booking, Invoice
+from .cache_utils import get_garage_services_cached
 # from accounts.models import User
 
 
@@ -109,9 +110,9 @@ def delete_service(request, pk):
 
 @login_required
 def service_type_list(request):
-    service_types = ServiceType.objects.all().order_by("name")
+    services = get_garage_services_cached()
     return render(
-        request, "garage/service_type_list.html", {"service_types": service_types}
+        request, "garage/service_type_list.html", {"servis": services}
     )
 
 

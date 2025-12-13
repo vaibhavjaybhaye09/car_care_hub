@@ -128,9 +128,12 @@ def verify_otp(request):
         code = request.POST.get('otp')
         if verify_otp_code(user, code):
             user.is_email_verified = True
-            user.otp_code = None
-            user.otp_expires_at = None
-            user.save(update_fields=['is_email_verified', 'otp_code', 'otp_expires_at'])
+            user.save(update_fields=['is_email_verified'])
+            
+            # user.otp_code = None
+            # user.otp_expires_at = None            
+            #user.save(update_fields=['is_email_verified', 'otp_code', 'otp_expires_at'])
+
             request.session.pop('pending_verify_username', None)
             messages.success(request, 'Your account is verified.')
             login(request, user)
@@ -243,9 +246,10 @@ def forgot_password_reset(request):
             messages.error(request, 'Passwords do not match.')
         else:
             user.set_password(p1)
-            user.otp_code = None
-            user.otp_expires_at = None
-            user.save(update_fields=['password', 'otp_code', 'otp_expires_at'])
+            user.save(update_fields=['password'])
+            # user.otp_code = None
+            # user.otp_expires_at = None
+            # user.save(update_fields=['password', 'otp_code', 'otp_expires_at'])
             # clear session flags
             for k in ['pwd_reset_user', 'pwd_reset_verified']:
                 request.session.pop(k, None)
